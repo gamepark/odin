@@ -1,3 +1,3 @@
-export { GameTemplateRules } from './GameTemplateRules'
-export { GameTemplateOptionsSpec } from './GameTemplateOptions'
-export { GameTemplateSetup } from './GameTemplateSetup'
+export { OdinRules } from './OdinRules'
+export { OdinOptionsSpec } from './OdinOptions'
+export { OdinSetup } from './OdinSetup'
