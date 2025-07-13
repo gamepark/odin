@@ -1,8 +1,9 @@
 import { MaterialGame, MaterialMove, MaterialRules, TimeLimit } from '@gamepark/rules-api'
 import { LocationType } from './material/LocationType'
 import { MaterialType } from './material/MaterialType'
-import { TheFirstStepRule } from './rules/TheFirstStepRule'
+import { PlayCardsRule } from './rules/PlayCardsRule'
 import { RuleId } from './rules/RuleId'
+import { DealCardsRule } from './rules/DealCardsRule'
 
 /**
  * This class implements the rules of the board game.
@@ -13,7 +14,8 @@ export class OdinRules
   implements TimeLimit<MaterialGame<number, MaterialType, LocationType>, MaterialMove<number, MaterialType, LocationType>>
 {
   rules = {
-    [RuleId.TheFirstStep]: TheFirstStepRule
+    [RuleId.PlayCards]: PlayCardsRule,
+    [RuleId.DealCards]: DealCardsRule
   }
 
   giveTime(): number {

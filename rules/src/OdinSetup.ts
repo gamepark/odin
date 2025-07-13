@@ -17,6 +17,6 @@ export class OdinSetup extends MaterialGameSetup<number, MaterialType, LocationT
   }
 
   start() {
-    this.startPlayerTurn(RuleId.TheFirstStep, this.players[0])
+    this.startRule(RuleId.DealCards)
   }
 }
