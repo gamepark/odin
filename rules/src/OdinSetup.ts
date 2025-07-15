@@ -14,6 +14,7 @@ export class OdinSetup extends MaterialGameSetup<number, MaterialType, LocationT
 
   setupMaterial(_options: OdinOptions) {
     this.material(MaterialType.Card).createItems(getEnumValues(Card).map((id) => ({ id, location: { type: LocationType.Deck } })))
+    this.material(MaterialType.Card).shuffle()
   }
 
   start() {

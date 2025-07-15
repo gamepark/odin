@@ -5,7 +5,6 @@ import { RuleId } from './RuleId'
 
 export class DealCardsRule extends MaterialRulesPart {
   onRuleStart() {
-    const deck = this.deck
     const discard = this.discard
     const moves: MaterialMove[] = []
     if (!discard.length) {
@@ -43,6 +42,8 @@ export class DealCardsRule extends MaterialRulesPart {
         )
       )
     }
+
+    moves.push(this.startPlayerTurn(RuleId.PlayCards, this.game.players[0]))
 
     return moves
   }

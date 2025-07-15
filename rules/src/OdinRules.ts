@@ -1,4 +1,4 @@
-import { MaterialGame, MaterialMove, MaterialRules, TimeLimit } from '@gamepark/rules-api'
+import { MaterialGame, MaterialMove, MaterialRules, PositiveSequenceStrategy, TimeLimit } from '@gamepark/rules-api'
 import { LocationType } from './material/LocationType'
 import { MaterialType } from './material/MaterialType'
 import { PlayCardsRule } from './rules/PlayCardsRule'
@@ -16,6 +16,14 @@ export class OdinRules
   rules = {
     [RuleId.PlayCards]: PlayCardsRule,
     [RuleId.DealCards]: DealCardsRule
+  }
+
+  locationsStrategies = {
+    [MaterialType.Card]: {
+      [LocationType.Hand]: new PositiveSequenceStrategy(),
+      [LocationType.PlayArea]: new PositiveSequenceStrategy(),
+      [LocationType.Deck]: new PositiveSequenceStrategy()
+    }
   }
 
   giveTime(): number {
