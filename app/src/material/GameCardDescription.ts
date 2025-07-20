@@ -1,4 +1,4 @@
-import { CardDescription } from '@gamepark/react-game'
+import { CardDescription, ItemContext } from '@gamepark/react-game'
 import Back from '../images/Back.jpg'
 import Blue1 from '../images/Blue1.jpg'
 import Blue2 from '../images/Blue2.jpg'
@@ -56,6 +56,9 @@ import Red8 from '../images/Red8.jpg'
 import Red9 from '../images/Red9.jpg'
 
 import { Card } from '@gamepark/odin/material/Card'
+import { MaterialType } from '@gamepark/odin/material/MaterialType'
+import { RuleId } from '@gamepark/odin/rules/RuleId'
+import { LocationType, MiddleOfTable } from '@gamepark/odin/material/LocationType'
 
 class GameCardDescription extends CardDescription {
   height = 9
@@ -116,6 +119,22 @@ class GameCardDescription extends CardDescription {
     [Card.Red7]: Red7,
     [Card.Red8]: Red8,
     [Card.Red9]: Red9
+  }
+
+  getShortClickLocalMove(context: ItemContext) {
+    const { rules, index } = context
+    const card = rules.material(MaterialType.Card).index(index)
+    const item = card.getItem()!
+    if (rules.game.rule?.id === RuleId.PlayCards && rules.game.rule.player === context.player && context.player === item.location.player) {
+      const table = rules.material(MaterialType.Card).location(LocationType.MiddleOfTable).locationId(MiddleOfTable.Current).length
+      const selected = rules.material(MaterialType.Card).location(LocationType.Hand).player(rules.game.rule.player).selected().length
+
+      if (item.selected) return card.unselectItem()
+      if (selected > table + 1) return
+      return card.selectItem()
+    }
+
+    return
   }
 }
 

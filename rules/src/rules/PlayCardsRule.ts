@@ -1,11 +1,10 @@
-import { CustomMove, isCustomMoveType, Material, MaterialMove, PlayerTurnRule } from '@gamepark/rules-api'
+import { CustomMove, isCustomMoveType, isMoveItemTypeAtOnce, ItemMove, Material, MaterialItem, MaterialMove, PlayerTurnRule } from '@gamepark/rules-api'
 import groupBy from 'lodash/groupBy'
 import isEqual from 'lodash/isEqual'
-import mapValues from 'lodash/mapValues'
 import orderBy from 'lodash/orderBy'
 import uniqWith from 'lodash/uniqWith'
 import { Card, getCardColor, getCardValue } from '../material/Card'
-import { LocationType } from '../material/LocationType'
+import { LocationType, MiddleOfTable } from '../material/LocationType'
 import { MaterialType } from '../material/MaterialType'
 import { CustomMoveType } from './CustomMoveType'
 import { RuleId } from './RuleId'
@@ -13,72 +12,67 @@ import { RuleId } from './RuleId'
 export class PlayCardsRule extends PlayerTurnRule {
   getPlayerMoves() {
     const playableCards = this.playableCards
-    const table = this.middleOfTable
+    const table = this.table
     const tableSize = table.length
 
-    const canPass = this.canPass
-    if (canPass) {
-      return [this.customMove(CustomMoveType.Pass)]
-    }
+    const moves: MaterialMove[] = []
 
-    if (!table.length && !this.playedCards.length) {
-      return playableCards.moveItems({
-        type: LocationType.PlayArea,
-        player: this.player
-      })
+    if (this.canPass) {
+      moves.push(this.customMove(CustomMoveType.Pass))
     }
 
     const combinations = this.getPlayableCombinations(
       playableCards.getItems().map((item) => item.id as Card),
-      tableSize + 1,
+      tableSize,
       this.tableValue
     )
 
-    const playedCardsIds = this.playedCards.getItems().map((item) => item.id as Card)
-    const applyableCombinations = playableCards.length ? combinations.filter((c) => playedCardsIds.every((id) => c.includes(id))) : combinations
-    const cards = this.hand.id<Card>((id) => applyableCombinations.some((c) => c.includes(id)))
+    console.log('Selected', JSON.stringify(this.material(MaterialType.Card).selected().getItems()))
 
-    return cards.moveItems({
-      type: LocationType.PlayArea,
-      player: this.player
-    })
+    moves.push(
+      ...combinations.map((c) =>
+        this.hand
+          .id((id: Card) => c.includes(id))
+          .sort(...this.sort)
+          .moveItemsAtOnce({
+            type: LocationType.MiddleOfTable,
+            id: MiddleOfTable.Next
+          })
+      )
+    )
+
+    return moves
+  }
+
+  get sort() {
+    return [(item: MaterialItem) => -getCardValue(item.id as Card), (item: MaterialItem) => getCardColor(item.id as Card)]
   }
 
   get canPass() {
-    const table = this.middleOfTable
-    const playedCards = this.playedCards
-    return !table.length ? playedCards.length === 1 : playedCards.length >= table.length
+    return this.nextTableValue && this.tableValue < this.nextTableValue
   }
 
   get tableValue() {
-    const table = this.middleOfTable
+    const table = this.table
     return !table.length ? 0 : this.concatCardValue(table.getItems().map((item) => item.id as Card))
   }
 
-  get cardByColors() {
-    const hand = this.hand
-    const indexes = hand.getIndexes()
-    return mapValues(
-      groupBy(indexes, (index) => getCardColor(hand.getItem(index).id as Card)),
-      (i) => hand.index(i).sort((item) => -getCardValue(item.id as Card))
-    )
+  get nextTableValue() {
+    const table = this.nextTable
+    return !table.length ? 0 : this.concatCardValue(table.getItems().map((item) => item.id as Card))
   }
 
   onCustomMove(move: CustomMove) {
     if (!isCustomMoveType(CustomMoveType.Pass)(move)) return []
     const moves: MaterialMove[] = []
-    moves.push(
-      this.playedCards.moveItemsAtOnce({
-        type: LocationType.MiddleOfTable
-      })
-    )
+    moves.push(this.startRule(RuleId.PickCard))
+    return moves
+  }
 
-    const table = this.middleOfTable
-    if (table.length) {
-      moves.push(this.startRule(RuleId.PickCard))
-    } else {
-      moves.push(this.startPlayerTurn(RuleId.PlayCards, this.nextPlayer))
-    }
+  afterItemMove(move: ItemMove) {
+    if (!isMoveItemTypeAtOnce(MaterialType.Card)(move)) return []
+    const moves: MaterialMove[] = []
+    moves.push(this.startRule(RuleId.PickCard))
     return moves
   }
 
@@ -94,18 +88,18 @@ export class PlayCardsRule extends PlayerTurnRule {
     return value
   }
 
-  get playedCards() {
-    return this.material(MaterialType.Card).location(LocationType.PlayArea).player(this.player)
+  get table() {
+    return this.material(MaterialType.Card).location(LocationType.MiddleOfTable).locationId(MiddleOfTable.Current)
   }
 
-  get middleOfTable() {
-    return this.material(MaterialType.Card).location(LocationType.MiddleOfTable)
+  get nextTable() {
+    return this.material(MaterialType.Card).location(LocationType.MiddleOfTable).locationId(MiddleOfTable.Next)
   }
 
   get playableCards() {
-    return this.material(MaterialType.Card)
-      .location((l) => l.type === LocationType.Hand || l.type === LocationType.PlayArea)
-      .player(this.player)
+    return this.material(MaterialType.Card).location(
+      (l) => (l.type === LocationType.Hand && l.player === this.player) || (l.type === LocationType.MiddleOfTable && l.id === MiddleOfTable.Next)
+    )
   }
 
   get hand() {
@@ -124,7 +118,7 @@ export class PlayCardsRule extends PlayerTurnRule {
    * Calcule la valeur concaténée d'un ensemble de cartes (triées décroissant).
    */
   concatCardValue(cards: Card[]): number {
-    const values = cards.map((card) => Math.floor(card / 10)).sort((a, b) => b - a)
+    const values = cards.sort((card) => -getCardValue(card)).map((card) => Math.floor(card / 10))
     return parseInt(values.join(''), 10)
   }
 

@@ -1,7 +1,11 @@
 export enum LocationType {
   Deck = 1,
   Hand,
-  PlayArea,
   MiddleOfTable,
   Discard
+}
+
+export enum MiddleOfTable {
+  Current = 1,
+  Next
 }

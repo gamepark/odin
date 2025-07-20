@@ -5,11 +5,12 @@ import { LocationType } from './material/LocationType'
 import { MaterialType } from './material/MaterialType'
 import { RuleId } from './rules/RuleId'
 import { Card } from './material/Card'
+import { PlayerId } from './PlayerId'
 
 /**
  * This class creates a new Game based on the game options
  */
-export class OdinSetup extends MaterialGameSetup<number, MaterialType, LocationType, OdinOptions> {
+export class OdinSetup extends MaterialGameSetup<PlayerId, MaterialType, LocationType, OdinOptions> {
   Rules = OdinRules
 
   setupMaterial(_options: OdinOptions) {
