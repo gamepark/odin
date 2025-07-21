@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 
-import { Card, getCardValue } from '@gamepark/odin/material/Card'
 import { LocationType } from '@gamepark/odin/material/LocationType'
 import { MaterialType } from '@gamepark/odin/material/MaterialType'
 import { CustomMoveType } from '@gamepark/odin/rules/CustomMoveType'
@@ -17,37 +16,17 @@ export const PlayCardsHeader = () => {
     .material(MaterialType.Card)
     .location(LocationType.Hand)
     .selected()
-    .sort((item) => -getCardValue(item.id as Card))
+    .sort(...rule.sort)
     .getIndexes()
 
-  console.log(
-    'Selected indexes header',
-    rule
-      .material(MaterialType.Card)
-      .location(LocationType.Hand)
-      .selected()
-      .sort(...rule.sort)
-      .getItems()
-  )
   const placeMove = useLegalMove((move: MaterialMove) => {
     if (!isMoveItemTypeAtOnce(MaterialType.Card)(move)) return false
-    console.log('Possible move', move.indexes)
     return isEqual(move.indexes, selectedIndexes)
   })
 
-  if (rule.canPass) {
-    return (
-      <>
-        <PlayMoveButton move={pass}>Passer</PlayMoveButton>
-        OU
-        <PlayMoveButton move={selectedIndexes.length ? placeMove : undefined}>Placer</PlayMoveButton>
-      </>
-    )
-  }
-
-  if (selectedIndexes.length) {
-    return <PlayMoveButton move={placeMove}>Placer</PlayMoveButton>
-  }
-
-  return <>Jouez des cartes de votre main.</>
+  return (
+    <>
+      <PlayMoveButton move={pass}>Passer</PlayMoveButton> OU <PlayMoveButton move={selectedIndexes.length ? placeMove : undefined}>Placer</PlayMoveButton>
+    </>
+  )
 }

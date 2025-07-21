@@ -17,17 +17,11 @@ export class PlayCardsRule extends PlayerTurnRule {
 
     const moves: MaterialMove[] = []
 
-    if (this.canPass) {
-      moves.push(this.customMove(CustomMoveType.Pass))
-    }
-
     const combinations = this.getPlayableCombinations(
       playableCards.getItems().map((item) => item.id as Card),
       tableSize,
       this.tableValue
     )
-
-    console.log('Selected', JSON.stringify(this.material(MaterialType.Card).selected().getItems()))
 
     moves.push(
       ...combinations.map((c) =>
@@ -41,15 +35,13 @@ export class PlayCardsRule extends PlayerTurnRule {
       )
     )
 
+    moves.push(this.customMove(CustomMoveType.Pass))
+
     return moves
   }
 
   get sort() {
     return [(item: MaterialItem) => -getCardValue(item.id as Card), (item: MaterialItem) => getCardColor(item.id as Card)]
-  }
-
-  get canPass() {
-    return this.nextTableValue && this.tableValue < this.nextTableValue
   }
 
   get tableValue() {
@@ -64,15 +56,24 @@ export class PlayCardsRule extends PlayerTurnRule {
 
   onCustomMove(move: CustomMove) {
     if (!isCustomMoveType(CustomMoveType.Pass)(move)) return []
-    const moves: MaterialMove[] = []
-    moves.push(this.startRule(RuleId.PickCard))
+    const moves = this.afterPlaceCards()
+    moves.push(this.startPlayerTurn(RuleId.PlayCards, this.nextPlayer))
     return moves
   }
 
   afterItemMove(move: ItemMove) {
     if (!isMoveItemTypeAtOnce(MaterialType.Card)(move)) return []
-    const moves: MaterialMove[] = []
+    const moves = this.afterPlaceCards()
     moves.push(this.startRule(RuleId.PickCard))
+    return moves
+  }
+
+  afterPlaceCards() {
+    const moves: MaterialMove[] = []
+    const selected = this.material(MaterialType.Card).selected().getItems()
+    for (const item of selected) {
+      delete item.selected
+    }
     return moves
   }
 
@@ -118,7 +119,7 @@ export class PlayCardsRule extends PlayerTurnRule {
    * Calcule la valeur concaténée d'un ensemble de cartes (triées décroissant).
    */
   concatCardValue(cards: Card[]): number {
-    const values = cards.sort((card) => -getCardValue(card)).map((card) => Math.floor(card / 10))
+    const values = cards.map((card) => getCardValue(card)).sort((a, b) => getCardValue(b) - getCardValue(a))
     return parseInt(values.join(''), 10)
   }
 
