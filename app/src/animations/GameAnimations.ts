@@ -6,7 +6,7 @@ export const gameAnimations = new MaterialGameAnimations()
 
 gameAnimations
   .when()
-  .move((move) => isCustomMoveType(CustomMoveType.TurnTempo)(move))
+  .move((move) => isCustomMoveType(CustomMoveType.TurnTempo)(move) && !move.data)
   .mine()
   .none()
 

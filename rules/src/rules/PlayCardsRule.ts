@@ -86,6 +86,8 @@ export class PlayCardsRule extends BasePlayerTurn {
     const moves = this.afterPlaceCards()
     this.memorize(Memory.LastPlayerThatPlay, this.player)
 
+    const isEndOfRound = this.hand.length === 0
+    moves.push(this.customMove(CustomMoveType.TurnTempo, isEndOfRound))
     if (this.hand.length === 0) {
       moves.push(this.startRule(RuleId.EndOfRound))
     } else {

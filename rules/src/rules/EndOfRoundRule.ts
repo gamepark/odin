@@ -2,7 +2,6 @@ import { isMoveItemTypeAtOnce, isShuffleItemType, ItemMove, MaterialMove, Materi
 import { LocationType } from '../material/LocationType'
 import { MaterialType } from '../material/MaterialType'
 import { PlayerId } from '../PlayerId'
-import { CustomMoveType } from './CustomMoveType'
 import { Memory } from './Memory'
 import { RuleId } from './RuleId'
 
@@ -11,7 +10,6 @@ export class EndOfRoundRule extends MaterialRulesPart {
     const moves: MaterialMove[] = []
 
     // Compute score
-    moves.push(this.customMove(CustomMoveType.TurnTempo))
     moves.push(...this.groupToDeckMove)
 
     return moves

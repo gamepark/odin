@@ -2,7 +2,6 @@ import { isMoveItemType, MaterialMove, MoveItem } from '@gamepark/rules-api'
 import { LocationType, MiddleOfTable } from '../material/LocationType'
 import { MaterialType } from '../material/MaterialType'
 import { BasePlayerTurn } from './BasePlayerTurn'
-import { CustomMoveType } from './CustomMoveType'
 import { RuleId } from './RuleId'
 
 export class PickCardRule extends BasePlayerTurn {
@@ -43,8 +42,6 @@ export class PickCardRule extends BasePlayerTurn {
         })
       )
     }
-
-    moves.push(this.customMove(CustomMoveType.TurnTempo))
     moves.push(this.startPlayerTurn(RuleId.PlayCards, this.nextPlayer))
     return moves
   }
