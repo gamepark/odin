@@ -1,9 +1,11 @@
-import { isMoveItemType, MaterialMove, MoveItem, PlayerTurnRule } from '@gamepark/rules-api'
-import { MaterialType } from '../material/MaterialType'
+import { isMoveItemType, MaterialMove, MoveItem } from '@gamepark/rules-api'
 import { LocationType, MiddleOfTable } from '../material/LocationType'
+import { MaterialType } from '../material/MaterialType'
+import { BasePlayerTurn } from './BasePlayerTurn'
+import { CustomMoveType } from './CustomMoveType'
 import { RuleId } from './RuleId'
 
-export class PickCard extends PlayerTurnRule {
+export class PickCardRule extends BasePlayerTurn {
   onRuleStart() {
     if (this.getPlayerMoves().length) return []
     return this.goToNextRule()
@@ -23,18 +25,26 @@ export class PickCard extends PlayerTurnRule {
 
   goToNextRule() {
     const moves: MaterialMove[] = []
-    moves.push(
-      this.currentTable.moveItemsAtOnce({
-        type: LocationType.Discard
-      })
-    )
+    const currentTable = this.currentTable
 
-    moves.push(
-      this.nextTable.moveItemsAtOnce({
-        id: MiddleOfTable.Current
-      })
-    )
+    if (currentTable.length) {
+      moves.push(
+        this.currentTable.moveItemsAtOnce({
+          type: LocationType.Discard
+        })
+      )
+    }
 
+    const nextTable = this.nextTable
+    if (nextTable.length) {
+      moves.push(
+        this.nextTable.moveItemsAtOnce({
+          id: MiddleOfTable.Current
+        })
+      )
+    }
+
+    moves.push(this.customMove(CustomMoveType.TurnTempo))
     moves.push(this.startPlayerTurn(RuleId.PlayCards, this.nextPlayer))
     return moves
   }

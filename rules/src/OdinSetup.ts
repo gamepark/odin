@@ -3,6 +3,7 @@ import { OdinOptions } from './OdinOptions'
 import { OdinRules } from './OdinRules'
 import { LocationType } from './material/LocationType'
 import { MaterialType } from './material/MaterialType'
+import { Memory } from './rules/Memory'
 import { RuleId } from './rules/RuleId'
 import { Card } from './material/Card'
 import { PlayerId } from './PlayerId'
@@ -19,6 +20,7 @@ export class OdinSetup extends MaterialGameSetup<PlayerId, MaterialType, Locatio
   }
 
   start() {
+    this.memorize(Memory.FirstPlayer, this.game.players[0])
     this.startRule(RuleId.DealCards)
   }
 }

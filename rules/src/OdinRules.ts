@@ -3,7 +3,8 @@ import { LocationType } from './material/LocationType'
 import { MaterialType } from './material/MaterialType'
 import { PlayerId } from './PlayerId'
 import { DealCardsRule } from './rules/DealCardsRule'
-import { PickCard } from './rules/PickCardRule'
+import { EndOfRoundRule } from './rules/EndOfRoundRule'
+import { PickCardRule } from './rules/PickCardRule'
 import { PlayCardsRule } from './rules/PlayCardsRule'
 import { RuleId } from './rules/RuleId'
 
@@ -18,7 +19,8 @@ export class OdinRules
   rules = {
     [RuleId.PlayCards]: PlayCardsRule,
     [RuleId.DealCards]: DealCardsRule,
-    [RuleId.PickCard]: PickCard
+    [RuleId.PickCard]: PickCardRule,
+    [RuleId.EndOfRound]: EndOfRoundRule
   }
 
   hidingStrategies = {
@@ -31,7 +33,8 @@ export class OdinRules
     [MaterialType.Card]: {
       [LocationType.Hand]: new PositiveSequenceStrategy(),
       [LocationType.Deck]: new PositiveSequenceStrategy(),
-      [LocationType.MiddleOfTable]: new PositiveSequenceStrategy()
+      [LocationType.MiddleOfTable]: new PositiveSequenceStrategy(),
+      [LocationType.Discard]: new PositiveSequenceStrategy()
     }
   }
 

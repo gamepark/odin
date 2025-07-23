@@ -1,4 +1,11 @@
+import { Card } from '@gamepark/odin/material/Card'
+import { LocationType } from '@gamepark/odin/material/LocationType'
+import { MaterialType } from '@gamepark/odin/material/MaterialType'
+import { PlayCardsRule } from '@gamepark/odin/rules/PlayCardsRule'
+import { RuleId } from '@gamepark/odin/rules/RuleId'
 import { CardDescription, ItemContext } from '@gamepark/react-game'
+import { isMoveItemTypeAtOnce, MaterialMove } from '@gamepark/rules-api'
+import isEqual from 'lodash/isEqual'
 import Back from '../images/Back.jpg'
 import Blue1 from '../images/Blue1.jpg'
 import Blue2 from '../images/Blue2.jpg'
@@ -54,11 +61,6 @@ import Red6 from '../images/Red6.jpg'
 import Red7 from '../images/Red7.jpg'
 import Red8 from '../images/Red8.jpg'
 import Red9 from '../images/Red9.jpg'
-
-import { Card } from '@gamepark/odin/material/Card'
-import { MaterialType } from '@gamepark/odin/material/MaterialType'
-import { RuleId } from '@gamepark/odin/rules/RuleId'
-import { LocationType, MiddleOfTable } from '@gamepark/odin/material/LocationType'
 
 class GameCardDescription extends CardDescription {
   height = 9
@@ -126,15 +128,40 @@ class GameCardDescription extends CardDescription {
     const card = rules.material(MaterialType.Card).index(index)
     const item = card.getItem()!
     if (rules.game.rule?.id === RuleId.PlayCards && rules.game.rule.player === context.player && context.player === item.location.player) {
-      const table = rules.material(MaterialType.Card).location(LocationType.MiddleOfTable).locationId(MiddleOfTable.Current).length
-      const selected = rules.material(MaterialType.Card).location(LocationType.Hand).player(rules.game.rule.player).selected().length
-
       if (item.selected) return card.unselectItem()
-      if (selected > table + 1) return
       return card.selectItem()
     }
 
     return
+  }
+
+  canDrag(move: MaterialMove, context: ItemContext) {
+    const rules = context.rules
+    if (rules.game.rule?.id === RuleId.PlayCards && isMoveItemTypeAtOnce(MaterialType.Card)(move)) {
+      const rule = new PlayCardsRule(rules.game)
+      const item = rules.material(MaterialType.Card).getItem<Card>(context.index)
+      if (item.location.player !== context.player) return false
+      const hand = rules.material(MaterialType.Card).location(LocationType.Hand).player(context.player)
+      const handIndexes = hand.getIndexes()
+      const selected = hand.selected()
+      //const movesForThisItem = rule.getPlayerMoves().filter((m) => isMoveItemTypeAtOnce(MaterialType.Card)(m) && m.indexes.includes(item.id))
+
+      if (!selected.length && move.indexes.length === 1 && move.indexes[0] === context.index) return true
+      if (!selected.length && move.indexes.length === handIndexes.length) return true
+      if (item.selected) {
+        const selectedIndexes = rules
+          .material(MaterialType.Card)
+          .location(LocationType.Hand)
+          .selected()
+          .sort(...rule.sort)!
+          .getIndexes()
+        return isEqual(move.indexes, selectedIndexes)
+      }
+
+      return false
+    }
+
+    return super.canDrag(move, context)
   }
 }
 

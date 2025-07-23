@@ -1,4 +1,4 @@
-import { CustomMove, isCustomMoveType, isMoveItemTypeAtOnce, ItemMove, Material, MaterialItem, MaterialMove, PlayerTurnRule } from '@gamepark/rules-api'
+import { CustomMove, isCustomMoveType, isMoveItemTypeAtOnce, ItemMove, MaterialItem, MaterialMove } from '@gamepark/rules-api'
 import groupBy from 'lodash/groupBy'
 import isEqual from 'lodash/isEqual'
 import orderBy from 'lodash/orderBy'
@@ -6,10 +6,13 @@ import uniqWith from 'lodash/uniqWith'
 import { Card, getCardColor, getCardValue } from '../material/Card'
 import { LocationType, MiddleOfTable } from '../material/LocationType'
 import { MaterialType } from '../material/MaterialType'
+import { PlayerId } from '../PlayerId'
+import { BasePlayerTurn } from './BasePlayerTurn'
 import { CustomMoveType } from './CustomMoveType'
+import { Memory } from './Memory'
 import { RuleId } from './RuleId'
 
-export class PlayCardsRule extends PlayerTurnRule {
+export class PlayCardsRule extends BasePlayerTurn {
   getPlayerMoves() {
     const playableCards = this.playableCards
     const table = this.table
@@ -23,6 +26,26 @@ export class PlayCardsRule extends PlayerTurnRule {
       this.tableValue
     )
 
+    const allHandCombination = this.getPlayableCombinations(
+      playableCards.getItems().map((item) => item.id as Card),
+      playableCards.length,
+      this.tableValue
+    )
+
+    if (allHandCombination.length) {
+      moves.push(
+        ...allHandCombination.map((c) =>
+          this.hand
+            .id((id: Card) => c.includes(id))
+            .sort(...this.sort)
+            .moveItemsAtOnce({
+              type: LocationType.MiddleOfTable,
+              id: MiddleOfTable.Next
+            })
+        )
+      )
+    }
+
     moves.push(
       ...combinations.map((c) =>
         this.hand
@@ -35,7 +58,9 @@ export class PlayCardsRule extends PlayerTurnRule {
       )
     )
 
-    moves.push(this.customMove(CustomMoveType.Pass))
+    if (table.length) {
+      moves.push(this.customMove(CustomMoveType.Pass))
+    }
 
     return moves
   }
@@ -49,22 +74,48 @@ export class PlayCardsRule extends PlayerTurnRule {
     return !table.length ? 0 : this.concatCardValue(table.getItems().map((item) => item.id as Card))
   }
 
-  get nextTableValue() {
-    const table = this.nextTable
-    return !table.length ? 0 : this.concatCardValue(table.getItems().map((item) => item.id as Card))
-  }
-
   onCustomMove(move: CustomMove) {
     if (!isCustomMoveType(CustomMoveType.Pass)(move)) return []
     const moves = this.afterPlaceCards()
-    moves.push(this.startPlayerTurn(RuleId.PlayCards, this.nextPlayer))
+    moves.push(...this.goToNextPlayer())
     return moves
   }
 
   afterItemMove(move: ItemMove) {
-    if (!isMoveItemTypeAtOnce(MaterialType.Card)(move)) return []
+    if (!isMoveItemTypeAtOnce(MaterialType.Card)(move) || move.location.type !== LocationType.MiddleOfTable) return []
     const moves = this.afterPlaceCards()
-    moves.push(this.startRule(RuleId.PickCard))
+    this.memorize(Memory.LastPlayerThatPlay, this.player)
+
+    if (this.hand.length === 0) {
+      moves.push(this.startRule(RuleId.EndOfRound))
+    } else {
+      moves.push(this.startRule(RuleId.PickCard))
+    }
+    return moves
+  }
+
+  goToNextPlayer() {
+    const next = this.nextPlayer
+    const moves: MaterialMove[] = []
+
+    const lastPlayerThatPlay = this.remind<PlayerId | undefined>(Memory.LastPlayerThatPlay)
+    if (lastPlayerThatPlay && next === lastPlayerThatPlay) {
+      this.forget(Memory.LastPlayerThatPlay)
+      const table = this.table
+      if (table.length) {
+        moves.push(
+          this.table.moveItemsAtOnce({
+            type: LocationType.Discard
+          })
+        )
+      }
+
+      moves.push(this.startPlayerTurn(RuleId.PlayCards, next))
+      return moves
+    } else {
+      moves.push(this.startPlayerTurn(RuleId.PlayCards, this.nextPlayer))
+    }
+
     return moves
   }
 
@@ -77,30 +128,16 @@ export class PlayCardsRule extends PlayerTurnRule {
     return moves
   }
 
-  getCardsValue(cards: Material) {
-    const items = cards.getItems()
-    let factor = Math.pow(10, items.length - 1)
-    let value = 0
-    for (const item of items) {
-      value += factor * getCardValue(item.id as Card)
-      factor /= 10
-    }
-
-    return value
+  get firstPlayer() {
+    return this.remind<PlayerId>(Memory.FirstPlayer)
   }
 
   get table() {
     return this.material(MaterialType.Card).location(LocationType.MiddleOfTable).locationId(MiddleOfTable.Current)
   }
 
-  get nextTable() {
-    return this.material(MaterialType.Card).location(LocationType.MiddleOfTable).locationId(MiddleOfTable.Next)
-  }
-
   get playableCards() {
-    return this.material(MaterialType.Card).location(
-      (l) => (l.type === LocationType.Hand && l.player === this.player) || (l.type === LocationType.MiddleOfTable && l.id === MiddleOfTable.Next)
-    )
+    return this.material(MaterialType.Card).location(LocationType.Hand).player(this.player)
   }
 
   get hand() {

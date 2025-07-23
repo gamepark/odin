@@ -1,3 +1,5 @@
 export enum Memory {
-  PlayedCards = 1
+  PlayedCards = 1,
+  FirstPlayer,
+  LastPlayerThatPlay
 }
