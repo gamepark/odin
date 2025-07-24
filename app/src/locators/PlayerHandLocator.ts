@@ -32,7 +32,7 @@ export class PlayerHandLocator extends HandLocator {
 
   getTwoPlayersCoordinates(location: Location, context: MaterialContext) {
     const index = getRelativePlayerIndex(context, location.player)
-    if (index === 0) return { x: 0, y: 12 }
+    if (index === 0) return { x: 0, y: context.player ? 14 : 12 }
     return { x: 0, y: -12 }
   }
 
