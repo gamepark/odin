@@ -1,4 +1,5 @@
 export enum CustomMoveType {
   Pass = 1,
-  TurnTempo
+  TurnTempo,
+  SortHand
 }

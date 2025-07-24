@@ -1,9 +1,21 @@
-import { hideItemId, hideItemIdToOthers, MaterialGame, MaterialMove, PositiveSequenceStrategy, SecretMaterialRules, TimeLimit } from '@gamepark/rules-api'
+import {
+  CustomMove,
+  hideItemId,
+  hideItemIdToOthers,
+  MaterialGame,
+  MaterialMove,
+  PlayMoveContext,
+  PositiveSequenceStrategy,
+  SecretMaterialRules,
+  TimeLimit
+} from '@gamepark/rules-api'
 import { LocationType } from './material/LocationType'
 import { MaterialType } from './material/MaterialType'
 import { PlayerId } from './PlayerId'
+import { CustomMoveType } from './rules/CustomMoveType'
 import { DealCardsRule } from './rules/DealCardsRule'
 import { EndOfRoundRule } from './rules/EndOfRoundRule'
+import { Memory } from './rules/Memory'
 import { PickCardRule } from './rules/PickCardRule'
 import { PlayCardsRule } from './rules/PlayCardsRule'
 import { RuleId } from './rules/RuleId'
@@ -38,7 +50,20 @@ export class OdinRules
     }
   }
 
+  restoreTransientState(previousState: MaterialGame) {
+    super.restoreTransientState(previousState)
+    this.memorize(Memory.HandSort, previousState.memory[Memory.HandSort])
+  }
+
   giveTime(): number {
     return 60
+  }
+
+  onCustomMove(move: CustomMove, context: PlayMoveContext) {
+    if (move.type === CustomMoveType.SortHand) {
+      this.memorize(Memory.HandSort, move.data)
+    }
+
+    return super.onCustomMove(move, context)
   }
 }

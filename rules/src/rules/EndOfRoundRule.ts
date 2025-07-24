@@ -15,24 +15,6 @@ export class EndOfRoundRule extends MaterialRulesPart {
     return moves
   }
 
-  get dealCards() {
-    const moves: MaterialMove[] = []
-    const deck = this.deck
-    for (const player of this.game.players) {
-      moves.push(
-        deck.dealAtOnce(
-          {
-            type: LocationType.Hand,
-            player: player
-          },
-          9
-        )
-      )
-    }
-
-    return moves
-  }
-
   get deck() {
     return this.material(MaterialType.Card).location(LocationType.Deck).deck()
   }
@@ -57,10 +39,9 @@ export class EndOfRoundRule extends MaterialRulesPart {
     }
 
     if (isShuffleItemType(MaterialType.Card)(move)) {
-      moves.push(...this.dealCards)
       const newFirstPlayer = this.newFirstPlayer
       this.memorize(Memory.FirstPlayer, newFirstPlayer)
-      moves.push(this.startPlayerTurn(RuleId.PlayCards, this.newFirstPlayer))
+      moves.push(this.startRule(RuleId.DealCards))
     }
 
     return moves

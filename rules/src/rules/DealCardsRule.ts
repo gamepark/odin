@@ -1,6 +1,8 @@
 import { isShuffleItemType, ItemMove, MaterialMove, MaterialRulesPart } from '@gamepark/rules-api'
 import { LocationType } from '../material/LocationType'
 import { MaterialType } from '../material/MaterialType'
+import { PlayerId } from '../PlayerId'
+import { Memory } from './Memory'
 import { RuleId } from './RuleId'
 
 export class DealCardsRule extends MaterialRulesPart {
@@ -29,21 +31,20 @@ export class DealCardsRule extends MaterialRulesPart {
   }
 
   dealToPlayersAndGo(): MaterialMove[] {
-    const deck = this.deck
     const moves: MaterialMove[] = []
-    for (const player of this.game.players) {
-      moves.push(
-        deck.dealAtOnce(
-          {
+    const deck = this.deck
+    for (let i = 0; i < 9; i++) {
+      for (const player of this.game.players) {
+        moves.push(
+          ...deck.deal({
             type: LocationType.Hand,
             player: player
-          },
-          9
+          })
         )
-      )
+      }
     }
 
-    moves.push(this.startPlayerTurn(RuleId.PlayCards, this.game.players[0]))
+    moves.push(this.startPlayerTurn(RuleId.PlayCards, this.remind<PlayerId>(Memory.FirstPlayer)))
 
     return moves
   }

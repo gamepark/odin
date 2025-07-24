@@ -128,8 +128,7 @@ class GameCardDescription extends CardDescription {
     const card = rules.material(MaterialType.Card).index(index)
     const item = card.getItem()!
     if (rules.game.rule?.id === RuleId.PlayCards && rules.game.rule.player === context.player && context.player === item.location.player) {
-      if (item.selected) return card.unselectItem()
-      return card.selectItem()
+      if (!item.selected) return card.selectItem()
     }
 
     return

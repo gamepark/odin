@@ -18,7 +18,7 @@ export class MiddleOfTableLocator extends ListLocator {
 
   getCoordinates(location: Location, _context: MaterialContext): Partial<Coordinates> {
     if (location.id === MiddleOfTable.Current) {
-      return { x: -10, y: 0 }
+      return { x: -12, y: 0 }
     }
 
     return { x: 0, y: 0 }
