@@ -62,6 +62,7 @@ import Red6 from '../images/Red6.jpg'
 import Red7 from '../images/Red7.jpg'
 import Red8 from '../images/Red8.jpg'
 import Red9 from '../images/Red9.jpg'
+import { GameCardHelp } from './help/GameCardHelp'
 
 class GameCardDescription extends CardDescription {
   height = 9
@@ -142,11 +143,18 @@ class GameCardDescription extends CardDescription {
     if (!isSelect) return
     const rule = new PlayCardsRule(context.rules.game)
     if (rule.game.rule?.id !== RuleId.PlayCards || rule.player !== context.player) return
-    const selectedIndexes = [...rule.material(MaterialType.Card).selected().getIndexes()].sort()
+    const selectedIndexes = rule
+      .material(MaterialType.Card)
+      .selected()
+      .sort(...rule.sort)
+      .getIndexes()
+
     const legalMoves = context.rules.getLegalMoves(context.player)
-    const moves: MoveItemsAtOnce | undefined = legalMoves.find(
-      (move) => isMoveItemTypeAtOnce(MaterialType.Card)(move) && isEqual(selectedIndexes, move.indexes)
-    ) as MoveItemsAtOnce | undefined
+    const moves: MoveItemsAtOnce | undefined = legalMoves.find((move) => {
+      isMoveItemTypeAtOnce(MaterialType.Card)(move) && console.log(selectedIndexes, move.indexes)
+      return isMoveItemTypeAtOnce(MaterialType.Card)(move) && isEqual(selectedIndexes, move.indexes)
+    }) as MoveItemsAtOnce | undefined
+
     return css`
       > *:after {
         content: '';
@@ -187,6 +195,8 @@ class GameCardDescription extends CardDescription {
 
     return super.canDrag(move, context)
   }
+
+  help = GameCardHelp
 }
 
 export const gameCardDescription = new GameCardDescription()
