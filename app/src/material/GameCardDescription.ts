@@ -1,10 +1,11 @@
+import { css } from '@emotion/react'
 import { Card } from '@gamepark/odin/material/Card'
 import { LocationType } from '@gamepark/odin/material/LocationType'
 import { MaterialType } from '@gamepark/odin/material/MaterialType'
 import { PlayCardsRule } from '@gamepark/odin/rules/PlayCardsRule'
 import { RuleId } from '@gamepark/odin/rules/RuleId'
 import { CardDescription, ItemContext } from '@gamepark/react-game'
-import { isMoveItemTypeAtOnce, MaterialMove } from '@gamepark/rules-api'
+import { isMoveItemTypeAtOnce, MaterialItem, MaterialMove, MoveItemsAtOnce } from '@gamepark/rules-api'
 import isEqual from 'lodash/isEqual'
 import Back from '../images/Back.jpg'
 import Blue1 from '../images/Blue1.jpg'
@@ -132,6 +133,30 @@ class GameCardDescription extends CardDescription {
     }
 
     return
+  }
+
+  getItemExtraCss(item: MaterialItem, context: ItemContext) {
+    if (item.location.type !== LocationType.Hand) return
+    if (!context.player || context.player !== item.location.player) return
+    const isSelect = !!item.selected
+    if (!isSelect) return
+    const rule = new PlayCardsRule(context.rules.game)
+    if (rule.game.rule?.id !== RuleId.PlayCards || rule.player !== context.player) return
+    const selectedIndexes = [...rule.material(MaterialType.Card).selected().getIndexes()].sort()
+    const legalMoves = context.rules.getLegalMoves(context.player)
+    const moves: MoveItemsAtOnce | undefined = legalMoves.find(
+      (move) => isMoveItemTypeAtOnce(MaterialType.Card)(move) && isEqual(selectedIndexes, move.indexes)
+    ) as MoveItemsAtOnce | undefined
+    return css`
+      > *:after {
+        content: '';
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        border-top: 0.2em solid ${moves ? 'green' : 'red'};
+        border-radius: 0.3em;
+      }
+    `
   }
 
   canDrag(move: MaterialMove, context: ItemContext) {
