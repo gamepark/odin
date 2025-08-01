@@ -63,6 +63,12 @@ import Red7 from '../images/Red7.jpg'
 import Red8 from '../images/Red8.jpg'
 import Red9 from '../images/Red9.jpg'
 import { GameCardHelp } from './help/GameCardHelp'
+import Player1 from '../images/panel/player-1.jpg'
+import Player2 from '../images/panel/player-2.jpg'
+import Player3 from '../images/panel/player-3.jpg'
+import Player4 from '../images/panel/player-4.jpg'
+import Player5 from '../images/panel/player-5.jpg'
+import Player6 from '../images/panel/player-6.jpg'
 
 class GameCardDescription extends CardDescription {
   height = 9
@@ -150,10 +156,9 @@ class GameCardDescription extends CardDescription {
       .getIndexes()
 
     const legalMoves = context.rules.getLegalMoves(context.player)
-    const moves: MoveItemsAtOnce | undefined = legalMoves.find((move) => {
-      isMoveItemTypeAtOnce(MaterialType.Card)(move) && console.log(selectedIndexes, move.indexes)
-      return isMoveItemTypeAtOnce(MaterialType.Card)(move) && isEqual(selectedIndexes, move.indexes)
-    }) as MoveItemsAtOnce | undefined
+    const moves: MoveItemsAtOnce | undefined = legalMoves.find(
+      (move) => isMoveItemTypeAtOnce(MaterialType.Card)(move) && isEqual(selectedIndexes, move.indexes)
+    ) as MoveItemsAtOnce | undefined
 
     return css`
       > *:after {
@@ -194,6 +199,17 @@ class GameCardDescription extends CardDescription {
     }
 
     return super.canDrag(move, context)
+  }
+
+  getImages() {
+    const images = super.getImages()
+    images.push(Player1)
+    images.push(Player2)
+    images.push(Player3)
+    images.push(Player4)
+    images.push(Player5)
+    images.push(Player6)
+    return images
   }
 
   help = GameCardHelp
