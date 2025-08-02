@@ -61,8 +61,8 @@ const panelPosition = (players: number, index: number) => {
 }
 
 const getPanelPositionCss = (players: number) => {
-  if (players === 2) return [BottomCenterPanel, TopCenterPanel]
-  if (players === 3) return [BottomCenterPanel, TopLeftPanel, TopRightPanel]
+  if (players === 2) return [BottomRightPanel, TopRightPanel]
+  if (players === 3) return [BottomRightPanel, TopLeftPanel, TopRightPanel]
   if (players === 4) return [BottomLeftPanel, TopLeftPanel, TopRightPanel, BottomRightPanel]
   if (players === 5) return [BottomLeftPanel, TopLeftPanel, TopCenterPanel, TopRightPanel, BottomRightPanel]
   return [BottomCenterPanel, BottomLeftPanel, TopLeftPanel, TopCenterPanel, TopRightPanel, BottomRightPanel]
