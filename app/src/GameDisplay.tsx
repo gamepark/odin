@@ -15,7 +15,7 @@ export const GameDisplay: FC<GameDisplayProps> = ({ players }) => {
   const size = getTableSize(players, !player)
   return (
     <>
-      <GameTable {...size} margin={margin} css={process.env.NODE_ENV !== 'development' && tableBorder}>
+      <GameTable {...size} margin={margin} css={process.env.NODE_ENV === 'development' && tableBorder}>
         <GameTableNavigation css={navigationCss(players)} />
         <PlayerPanels />
         <HandSortButtons xMin={size.xMin} yMin={size.yMin} />
