@@ -21,6 +21,7 @@ export class OdinSetup extends MaterialGameSetup<PlayerId, MaterialType, Locatio
 
   start() {
     this.memorize(Memory.FirstPlayer, this.game.players[0])
+    this.memorize(Memory.Round, 1)
     this.startRule(RuleId.DealCards)
   }
 }

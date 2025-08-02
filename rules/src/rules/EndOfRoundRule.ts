@@ -1,4 +1,5 @@
 import { isMoveItemTypeAtOnce, isShuffleItemType, ItemMove, MaterialMove, MaterialRulesPart } from '@gamepark/rules-api'
+import sum from 'lodash/sum'
 import { LocationType } from '../material/LocationType'
 import { MaterialType } from '../material/MaterialType'
 import { PlayerId } from '../PlayerId'
@@ -7,12 +8,32 @@ import { RuleId } from './RuleId'
 
 export class EndOfRoundRule extends MaterialRulesPart {
   onRuleStart() {
-    const moves: MaterialMove[] = []
+    const moves: MaterialMove[] = this.onRoundEnd()
 
-    // Compute score
-    moves.push(...this.groupToDeckMove)
+    // Only move cards if game is not ended
+    if (!moves.length) {
+      moves.push(...this.groupToDeckMove)
+    }
 
     return moves
+  }
+
+  onRoundEnd(): MaterialMove[] {
+    let ended = false
+    for (const player of this.game.players) {
+      const hand = this.material(MaterialType.Card).location(LocationType.Hand).player(player)
+      this.memorize(Memory.PlayerScore, (s: number[] = []) => [...s, hand.length], player)
+      const score = sum(this.remind<number[]>(Memory.PlayerScore, player))
+      if (!ended && score >= 15) ended = true
+    }
+
+    if (!ended) {
+      this.memorize(Memory.Round, (r: number) => {
+        return r + 1
+      })
+      return []
+    }
+    return [this.endGame()]
   }
 
   get deck() {

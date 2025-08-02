@@ -3,6 +3,7 @@ import { css } from '@emotion/react'
 import { GameTable, GameTableNavigation, usePlayerId } from '@gamepark/react-game'
 import { FC } from 'react'
 import { PlayerPanels } from './panels/PlayerPanels'
+import { RoundSummary } from './popup/RoundSummary'
 import { HandSortButtons } from './sort/HandSortButtons'
 
 type GameDisplayProps = {
@@ -13,6 +14,7 @@ export const GameDisplay: FC<GameDisplayProps> = ({ players }) => {
   const margin = { top: 7, left: 0, right: 0, bottom: 0 }
   const player = usePlayerId()
   const size = getTableSize(players, !player)
+
   return (
     <>
       <GameTable {...size} margin={margin} css={process.env.NODE_ENV === 'development' && tableBorder}>
@@ -20,6 +22,7 @@ export const GameDisplay: FC<GameDisplayProps> = ({ players }) => {
         <PlayerPanels />
         <HandSortButtons xMin={size.xMin} yMin={size.yMin} />
       </GameTable>
+      <RoundSummary />
     </>
   )
 }

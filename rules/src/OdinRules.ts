@@ -9,12 +9,14 @@ import {
   SecretMaterialRules,
   TimeLimit
 } from '@gamepark/rules-api'
+import { CompetitiveScore } from '../../../rules-api'
 import { LocationType } from './material/LocationType'
 import { MaterialType } from './material/MaterialType'
 import { PlayerId } from './PlayerId'
 import { CustomMoveType } from './rules/CustomMoveType'
 import { DealCardsRule } from './rules/DealCardsRule'
 import { EndOfRoundRule } from './rules/EndOfRoundRule'
+import { ScoreHelper } from './rules/helper/ScoreHelper'
 import { Memory } from './rules/Memory'
 import { PickCardRule } from './rules/PickCardRule'
 import { PlayCardsRule } from './rules/PlayCardsRule'
@@ -26,7 +28,9 @@ import { RuleId } from './rules/RuleId'
  */
 export class OdinRules
   extends SecretMaterialRules<PlayerId, MaterialType, LocationType>
-  implements TimeLimit<MaterialGame<PlayerId, MaterialType, LocationType>, MaterialMove<PlayerId, MaterialType, LocationType>>
+  implements
+    TimeLimit<MaterialGame<PlayerId, MaterialType, LocationType>, MaterialMove<PlayerId, MaterialType, LocationType>>,
+    CompetitiveScore<MaterialGame<PlayerId, MaterialType, LocationType>, MaterialMove<PlayerId, MaterialType, LocationType>, PlayerId>
 {
   rules = {
     [RuleId.PlayCards]: PlayCardsRule,
@@ -58,6 +62,12 @@ export class OdinRules
   giveTime(): number {
     return 60
   }
+
+  getScore(playerId: PlayerId): number {
+    return new ScoreHelper(this.game, playerId).score
+  }
+
+  rankByLowerScore = true
 
   onCustomMove(move: CustomMove, context: PlayMoveContext) {
     if (move.type === CustomMoveType.SortHand) {
