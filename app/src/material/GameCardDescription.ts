@@ -161,13 +161,14 @@ class GameCardDescription extends CardDescription {
     ) as MoveItemsAtOnce | undefined
 
     return css`
-      > *:after {
+      > div > div:before {
         content: '';
         height: 100%;
         width: 100%;
         position: absolute;
         border-top: 0.2em solid ${moves ? 'green' : 'red'};
         border-radius: 0.3em;
+        transform: translateZ(0.01em);
       }
     `
   }
