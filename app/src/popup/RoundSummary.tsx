@@ -16,8 +16,8 @@ export const RoundSummary = () => {
   const [open, setOpen] = useState(false)
   const players = rules.game.players
   useEffect(() => {
-    if (round === 1 || !rules.game.rule?.id || rules.game.rule.id !== RuleId.EndOfRound) return
     setOpen(true)
+    if (round === 1 || !rules.game.rule?.id || rules.game.rule.id !== RuleId.EndOfRound) return
   }, [round])
 
   return (
@@ -62,8 +62,10 @@ const RoundSummaryPlayer: FC<RoundSummaryPlayerProps> = (props) => {
   const name = usePlayerName(playerId)
   return (
     <th css={headerCss}>
-      <Avatar css={avatarCss} playerId={playerId} />
-      <span css={playerNameCss}>{name}</span>
+      <div css={avatarContainerCss}>
+        <Avatar css={avatarCss} playerId={playerId} />
+        <span css={playerNameCss}>{name}</span>
+      </div>
     </th>
   )
 }
@@ -140,11 +142,11 @@ const highlightCss = css`
 
 const tableCss = css`
   margin: 2em;
-  min-width: auto;
+  min-width: 48em;
 
   > thead > tr > th,
   > tbody > tr > td {
-    border-bottom: 0.1em solid #28b8ce;
+    border-bottom: 0.15em solid #28b8ce;
   }
 
   > tbody > tr > td,
@@ -155,7 +157,7 @@ const tableCss = css`
   > thead > tr > th:not(:last-of-type),
   > tbody > tr > td:not(:last-of-type),
   > tfoot > tr > td:not(:last-of-type) {
-    border-right: 0.1em solid #28b8ce;
+    border-right: 0.15em solid #28b8ce;
   }
 `
 
@@ -163,15 +165,21 @@ const headerCss = css`
   padding-bottom: 1em;
   padding-left: 0.5em;
   padding-right: 0.5em;
-  width: 8em;
+`
+
+const avatarContainerCss = css`
+  display: flex;
+  flex-direction: column;
 `
 
 const playerNameCss = css`
   text-overflow: ellipsis;
-  max-width: 7em;
+  text-align: center;
   overflow: hidden;
-  white-space: nowrap;
   display: block;
+  width: 10em;
+  align-self: center;
+  white-space: pre-wrap;
 `
 
 const avatarCss = css`
