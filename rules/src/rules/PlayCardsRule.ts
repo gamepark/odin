@@ -35,7 +35,7 @@ export class PlayCardsRule extends BasePlayerTurn {
     if (allHandCombination.length) {
       moves.push(
         ...allHandCombination.map((c) =>
-          this.hand
+          playableCards
             .id((id: Card) => c.includes(id))
             .sort(...this.sort)
             .moveItemsAtOnce({
@@ -46,9 +46,10 @@ export class PlayCardsRule extends BasePlayerTurn {
       )
     }
 
+    console.log(...combinations.map((c) => playableCards.id((id: Card) => c.includes(id)).getIndexes()))
     moves.push(
       ...combinations.map((c) =>
-        this.hand
+        playableCards
           .id((id: Card) => c.includes(id))
           .sort(...this.sort)
           .moveItemsAtOnce({
@@ -139,7 +140,9 @@ export class PlayCardsRule extends BasePlayerTurn {
   }
 
   get playableCards() {
-    return this.material(MaterialType.Card).location(LocationType.Hand).player(this.player)
+    return this.material(MaterialType.Card).location(
+      (l) => (l.type === LocationType.Hand && l.player === this.player) || (l.type === LocationType.MiddleOfTable && l.id === MiddleOfTable.Next)
+    )
   }
 
   get hand() {

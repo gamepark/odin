@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 
-import { LocationType } from '@gamepark/odin/material/LocationType'
+import { LocationType, MiddleOfTable } from '@gamepark/odin/material/LocationType'
 import { MaterialType } from '@gamepark/odin/material/MaterialType'
 import { CustomMoveType } from '@gamepark/odin/rules/CustomMoveType'
 import { PlayCardsRule } from '@gamepark/odin/rules/PlayCardsRule'
@@ -19,13 +19,16 @@ export const PlayCardsHeader = () => {
   const name = usePlayerName(activePlayer)
   const selectedIndexes = rule
     .material(MaterialType.Card)
-    .location(LocationType.Hand)
-    .selected()
+    .location(LocationType.MiddleOfTable)
+    .locationId(MiddleOfTable.Next)
     .sort(...rule.sort)
     .getIndexes()
 
+  //console.log(selectedIndexes)
+
   const placeMove = useLegalMove((move: MaterialMove) => {
     if (!isMoveItemTypeAtOnce(MaterialType.Card)(move)) return false
+    //console.log(selectedIndexes, move.indexes)
     return isEqual(move.indexes, selectedIndexes)
   })
 

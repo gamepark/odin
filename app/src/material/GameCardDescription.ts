@@ -1,11 +1,11 @@
 import { css } from '@emotion/react'
 import { Card } from '@gamepark/odin/material/Card'
-import { LocationType } from '@gamepark/odin/material/LocationType'
+import { LocationType, MiddleOfTable } from '@gamepark/odin/material/LocationType'
 import { MaterialType } from '@gamepark/odin/material/MaterialType'
 import { PlayCardsRule } from '@gamepark/odin/rules/PlayCardsRule'
 import { RuleId } from '@gamepark/odin/rules/RuleId'
 import { CardDescription, ItemContext } from '@gamepark/react-game'
-import { isMoveItemTypeAtOnce, MaterialItem, MaterialMove, MoveItemsAtOnce } from '@gamepark/rules-api'
+import { isMoveItemType, isMoveItemTypeAtOnce, MaterialItem, MaterialMove, MoveItemsAtOnce } from '@gamepark/rules-api'
 import isEqual from 'lodash/isEqual'
 import Back from '../images/Back.jpg'
 import Blue1 from '../images/Blue1.jpg'
@@ -44,6 +44,12 @@ import Orange6 from '../images/Orange6.jpg'
 import Orange7 from '../images/Orange7.jpg'
 import Orange8 from '../images/Orange8.jpg'
 import Orange9 from '../images/Orange9.jpg'
+import Player1 from '../images/panel/player-1.jpg'
+import Player2 from '../images/panel/player-2.jpg'
+import Player3 from '../images/panel/player-3.jpg'
+import Player4 from '../images/panel/player-4.jpg'
+import Player5 from '../images/panel/player-5.jpg'
+import Player6 from '../images/panel/player-6.jpg'
 import Pink1 from '../images/Pink1.jpg'
 import Pink2 from '../images/Pink2.jpg'
 import Pink3 from '../images/Pink3.jpg'
@@ -63,12 +69,6 @@ import Red7 from '../images/Red7.jpg'
 import Red8 from '../images/Red8.jpg'
 import Red9 from '../images/Red9.jpg'
 import { GameCardHelp } from './help/GameCardHelp'
-import Player1 from '../images/panel/player-1.jpg'
-import Player2 from '../images/panel/player-2.jpg'
-import Player3 from '../images/panel/player-3.jpg'
-import Player4 from '../images/panel/player-4.jpg'
-import Player5 from '../images/panel/player-5.jpg'
-import Player6 from '../images/panel/player-6.jpg'
 
 class GameCardDescription extends CardDescription {
   height = 9
@@ -131,27 +131,40 @@ class GameCardDescription extends CardDescription {
     [Card.Red9]: Red9
   }
 
+  canShortClick(move: MaterialMove, context: ItemContext) {
+    const canShortClick = super.canShortClick(move, context)
+    if (canShortClick || !context.player) return canShortClick
+    return (
+      isMoveItemType(MaterialType.Card)(move) &&
+      move.location.player === context.player &&
+      move.location.type === LocationType.Hand &&
+      move.itemIndex === context.index
+    )
+  }
+
   getShortClickLocalMove(context: ItemContext) {
     const { rules, index } = context
     const card = rules.material(MaterialType.Card).index(index)
     const item = card.getItem()!
-    if (rules.game.rule?.id === RuleId.PlayCards && rules.game.rule.player === context.player && context.player === item.location.player) {
-      if (!item.selected) return card.selectItem()
+    if (rules.game.rule?.id === RuleId.PlayCards && rules.game.rule.player === context.player && context.player) {
+      if (item.location.type === LocationType.MiddleOfTable && item.location.id === MiddleOfTable.Next) {
+        return card.moveItem({ type: LocationType.Hand, player: context.player })
+      } else if (item.location.type === LocationType.Hand && item.location.player === context.player) {
+        return card.moveItem({ type: LocationType.MiddleOfTable, id: MiddleOfTable.Next })
+      }
     }
 
     return
   }
 
   getItemExtraCss(item: MaterialItem, context: ItemContext) {
-    if (item.location.type !== LocationType.Hand) return
-    if (!context.player || context.player !== item.location.player) return
-    const isSelect = !!item.selected
-    if (!isSelect) return
+    if (item.location.type !== LocationType.MiddleOfTable || item.location.id !== MiddleOfTable.Next) return
     const rule = new PlayCardsRule(context.rules.game)
     if (rule.game.rule?.id !== RuleId.PlayCards || rule.player !== context.player) return
     const selectedIndexes = rule
       .material(MaterialType.Card)
-      .selected()
+      .location(LocationType.MiddleOfTable)
+      .locationId(MiddleOfTable.Next)
       .sort(...rule.sort)
       .getIndexes()
 

@@ -15,10 +15,15 @@ export const RoundSummary = () => {
   const round = rules.remind<number>(Memory.Round)
   const [open, setOpen] = useState(false)
   const players = rules.game.players
+  const winner = getWinner(rules, round - 1)
   useEffect(() => {
-    setOpen(true)
     if (round === 1 || !rules.game.rule?.id || rules.game.rule.id !== RuleId.EndOfRound) return
-  }, [round])
+    if (!open && winner) {
+      setOpen(true)
+    }
+  }, [round, winner])
+
+  const name = usePlayerName(winner)
 
   return (
     <RulesDialog open={open} close={() => setOpen(false)}>
@@ -86,7 +91,7 @@ const RoundSummaryLine: FC<RoundSummaryLineProps> = (props) => {
       </td>
       {players.map((p) => (
         <td css={[scoreCss, winner === p ? highlightCss : undefined]} key={p}>
-          {new ScoreHelper(rules.game, p).getRoundScore(round)}
+          {new ScoreHelper(rules.game, p).getRoundScore(round + 1)}
         </td>
       ))}
     </tr>

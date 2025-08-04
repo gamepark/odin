@@ -35,6 +35,8 @@ export class DealCardsRule extends MaterialRulesPart {
     const deck = this.deck
     for (let i = 0; i < 9; i++) {
       for (const player of this.game.players) {
+        const hand = this.getPlayerHand(player)
+        if (hand.length + i >= 9) continue
         moves.push(
           ...deck.deal({
             type: LocationType.Hand,
@@ -47,6 +49,10 @@ export class DealCardsRule extends MaterialRulesPart {
     moves.push(this.startPlayerTurn(RuleId.PlayCards, this.remind<PlayerId>(Memory.FirstPlayer)))
 
     return moves
+  }
+
+  getPlayerHand(player: PlayerId) {
+    return this.material(MaterialType.Card).location(LocationType.Hand).player(player)
   }
 
   get deck() {

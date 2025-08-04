@@ -11,6 +11,7 @@ import { Locators } from './locators/Locators'
 import { Material } from './material/Material'
 import { OdinScoringDescription } from './scoring/OdinScoringDescription'
 import translations from './translations.json'
+import { Tutorial } from './tutorial/Tutorial'
 
 setupTranslation(translations, { debug: false })
 
@@ -21,6 +22,7 @@ ReactDOM.render(
       Rules={OdinRules}
       optionsSpec={OdinOptionsSpec}
       GameSetup={OdinSetup}
+      tutorial={new Tutorial()}
       scoring={new OdinScoringDescription()}
       material={Material}
       locators={Locators}

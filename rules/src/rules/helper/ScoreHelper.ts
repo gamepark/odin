@@ -21,8 +21,8 @@ export class ScoreHelper extends MaterialRulesPart {
     return sum(this.remind<number[]>(Memory.PlayerScore, this.player))
   }
 
-  getRoundScore(round: number): number {
-    return this.remind<number[]>(Memory.PlayerScore, this.player)[round]
+  getRoundScore(round: number): number | undefined {
+    return this.remind<number[] | undefined>(Memory.PlayerScore, this.player)?.[round - 1]
   }
 
   get isWinning() {

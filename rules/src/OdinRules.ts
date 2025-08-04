@@ -1,5 +1,7 @@
 import {
+  CompetitiveScore,
   CustomMove,
+  FillGapStrategy,
   hideItemId,
   hideItemIdToOthers,
   MaterialGame,
@@ -9,7 +11,6 @@ import {
   SecretMaterialRules,
   TimeLimit
 } from '@gamepark/rules-api'
-import { CompetitiveScore } from '../../../rules-api'
 import { LocationType } from './material/LocationType'
 import { MaterialType } from './material/MaterialType'
 import { PlayerId } from './PlayerId'
@@ -49,7 +50,7 @@ export class OdinRules
     [MaterialType.Card]: {
       [LocationType.Hand]: new PositiveSequenceStrategy(),
       [LocationType.Deck]: new PositiveSequenceStrategy(),
-      [LocationType.MiddleOfTable]: new PositiveSequenceStrategy(),
+      [LocationType.MiddleOfTable]: new FillGapStrategy(),
       [LocationType.Discard]: new PositiveSequenceStrategy()
     }
   }
