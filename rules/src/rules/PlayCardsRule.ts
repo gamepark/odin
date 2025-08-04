@@ -46,7 +46,6 @@ export class PlayCardsRule extends BasePlayerTurn {
       )
     }
 
-    console.log(...combinations.map((c) => playableCards.id((id: Card) => c.includes(id)).getIndexes()))
     moves.push(
       ...combinations.map((c) =>
         playableCards
@@ -77,23 +76,17 @@ export class PlayCardsRule extends BasePlayerTurn {
 
   onCustomMove(move: CustomMove) {
     if (!isCustomMoveType(CustomMoveType.Pass)(move)) return []
-    const moves = this.afterPlaceCards()
+    const moves: MaterialMove[] = []
     moves.push(...this.goToNextPlayer())
     return moves
   }
 
   afterItemMove(move: ItemMove) {
     if (!isMoveItemTypeAtOnce(MaterialType.Card)(move) || move.location.type !== LocationType.MiddleOfTable) return []
-    const moves = this.afterPlaceCards()
+    const moves: MaterialMove[] = []
     this.memorize(Memory.LastPlayerThatPlay, this.player)
 
-    const isEndOfRound = this.hand.length === 0
-    moves.push(this.customMove(CustomMoveType.TurnTempo, isEndOfRound))
-    if (this.hand.length === 0) {
-      moves.push(this.startRule(RuleId.EndOfRound))
-    } else {
-      moves.push(this.startRule(RuleId.PickCard))
-    }
+    moves.push(this.startRule(RuleId.PickCard))
     return moves
   }
 
@@ -119,15 +112,6 @@ export class PlayCardsRule extends BasePlayerTurn {
       moves.push(this.startPlayerTurn(RuleId.PlayCards, this.nextPlayer))
     }
 
-    return moves
-  }
-
-  afterPlaceCards() {
-    const moves: MaterialMove[] = []
-    const selected = this.material(MaterialType.Card).selected().getItems()
-    for (const item of selected) {
-      delete item.selected
-    }
     return moves
   }
 

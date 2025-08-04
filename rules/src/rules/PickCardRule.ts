@@ -2,12 +2,24 @@ import { isMoveItemType, MaterialMove, MoveItem } from '@gamepark/rules-api'
 import { LocationType, MiddleOfTable } from '../material/LocationType'
 import { MaterialType } from '../material/MaterialType'
 import { BasePlayerTurn } from './BasePlayerTurn'
+import { CustomMoveType } from './CustomMoveType'
 import { RuleId } from './RuleId'
 
 export class PickCardRule extends BasePlayerTurn {
   onRuleStart() {
-    if (this.getPlayerMoves().length) return []
-    return this.goToNextRule()
+    if (this.isEndOfRound) {
+      return [this.customMove(CustomMoveType.TurnTempo, true), this.startRule(RuleId.EndOfRound)]
+    }
+
+    const moves: MaterialMove[] = [this.customMove(CustomMoveType.TurnTempo)]
+
+    if (this.getPlayerMoves().length) return moves
+    moves.push(...this.goToNextRule())
+    return moves
+  }
+
+  get isEndOfRound() {
+    return this.material(MaterialType.Card).location(LocationType.Hand).player(this.player).length === 0
   }
 
   getPlayerMoves(): MaterialMove[] {
@@ -25,7 +37,6 @@ export class PickCardRule extends BasePlayerTurn {
   goToNextRule() {
     const moves: MaterialMove[] = []
     const currentTable = this.currentTable
-
     if (currentTable.length) {
       moves.push(
         this.currentTable.moveItemsAtOnce({

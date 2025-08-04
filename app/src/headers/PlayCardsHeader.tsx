@@ -24,11 +24,8 @@ export const PlayCardsHeader = () => {
     .sort(...rule.sort)
     .getIndexes()
 
-  //console.log(selectedIndexes)
-
   const placeMove = useLegalMove((move: MaterialMove) => {
     if (!isMoveItemTypeAtOnce(MaterialType.Card)(move)) return false
-    //console.log(selectedIndexes, move.indexes)
     return isEqual(move.indexes, selectedIndexes)
   })
 
