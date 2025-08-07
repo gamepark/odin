@@ -2,7 +2,8 @@ import { css } from '@emotion/react'
 import { Card } from '@gamepark/odin/material/Card'
 import { LocationType, MiddleOfTable } from '@gamepark/odin/material/LocationType'
 import { MaterialType } from '@gamepark/odin/material/MaterialType'
-import { PlayCardsRule } from '@gamepark/odin/rules/PlayCardsRule'
+import { PlayerId } from '@gamepark/odin/PlayerId'
+import { SortHelper } from '@gamepark/odin/rules/helper/SortHelper'
 import { RuleId } from '@gamepark/odin/rules/RuleId'
 import { CardDescription, ItemContext } from '@gamepark/react-game'
 import { isMoveItemType, isMoveItemTypeAtOnce, MaterialItem, MaterialMove, MoveItemsAtOnce } from '@gamepark/rules-api'
@@ -142,33 +143,65 @@ class GameCardDescription extends CardDescription {
     )
   }
 
+  canDragItem(context: ItemContext, legalMoves: MaterialMove[]): boolean {
+    const { rules, index } = context
+    if (rules.game.rule?.id === RuleId.PlayCards && rules.game.rule.player === context.player) {
+      const card = rules.material(MaterialType.Card).index(index)
+      const item = card.getItem<Card>()!
+      if (this.isIgnored(item, context)) return false
+      return (
+        (item.location.type === LocationType.Hand && item.location.player === context.player) ||
+        (item.location.type === LocationType.MiddleOfTable && item.location.id === MiddleOfTable.Next)
+      )
+    }
+    return super.canDragItem(context, legalMoves)
+  }
+
+  canDrag(move: MaterialMove, context: ItemContext): boolean {
+    if (isMoveItemTypeAtOnce(MaterialType.Card)(move)) return false
+    return super.canDrag(move, context)
+  }
+
   getShortClickLocalMove(context: ItemContext) {
     const { rules, index } = context
     const card = rules.material(MaterialType.Card).index(index)
-    const item = card.getItem()!
-    if (rules.game.rule?.id === RuleId.PlayCards && rules.game.rule.player === context.player && context.player) {
-      if (item.location.type === LocationType.MiddleOfTable && item.location.id === MiddleOfTable.Next) {
-        return card.moveItem({ type: LocationType.Hand, player: context.player })
-      } else if (item.location.type === LocationType.Hand && item.location.player === context.player) {
-        return card.moveItem({ type: LocationType.MiddleOfTable, id: MiddleOfTable.Next })
-      }
+    const item = card.getItem<Card>()!
+    if (this.isIgnored(item, context)) return
+    if (rules.game.rule?.id !== RuleId.PlayCards || rules.game.rule.player !== context.player) return
+    if (item.location.type === LocationType.MiddleOfTable && item.location.id === MiddleOfTable.Next) {
+      return card.moveItem({ type: LocationType.Hand, player: context.player })
+    } else if (item.location.type === LocationType.Hand && item.location.player === context.player) {
+      return card.moveItem({ type: LocationType.MiddleOfTable, id: MiddleOfTable.Next })
     }
 
     return
   }
 
+  isIgnored(item: MaterialItem<PlayerId, LocationType, Card>, context: ItemContext) {
+    const { rules } = context
+    if (!rules.game.tutorial) return false
+    if (rules.game.tutorial.step < 4) return true
+    return (
+      [12, 13, 25, 26, 27].includes(rules.game.tutorial.step) ||
+      ([4].includes(rules.game.tutorial.step) && item.id !== Card.Blue1) ||
+      ([14, 15].includes(rules.game.tutorial.step) && ![Card.Green2, Card.Green1].includes(item.id)) ||
+      ([21].includes(rules.game.tutorial.step) && ![Card.Orange8, Card.Orange5, Card.Orange3].includes(item.id))
+    )
+  }
+
   getItemExtraCss(item: MaterialItem, context: ItemContext) {
+    const { rules, player } = context
     if (item.location.type !== LocationType.MiddleOfTable || item.location.id !== MiddleOfTable.Next) return
-    const rule = new PlayCardsRule(context.rules.game)
-    if (rule.game.rule?.id !== RuleId.PlayCards || rule.player !== context.player) return
-    const selectedIndexes = rule
+    if (rules.game.rule?.id !== RuleId.PlayCards || rules.game.rule.player !== player) return
+    const sortHelper = new SortHelper(rules.game)
+    const selectedIndexes = rules
       .material(MaterialType.Card)
       .location(LocationType.MiddleOfTable)
       .locationId(MiddleOfTable.Next)
-      .sort(...rule.sort)
+      .sort(...sortHelper.sortByValue)
       .getIndexes()
 
-    const legalMoves = context.rules.getLegalMoves(context.player)
+    const legalMoves = rules.getLegalMoves(player!)
     const moves: MoveItemsAtOnce | undefined = legalMoves.find(
       (move) => isMoveItemTypeAtOnce(MaterialType.Card)(move) && isEqual(selectedIndexes, move.indexes)
     ) as MoveItemsAtOnce | undefined
@@ -184,35 +217,6 @@ class GameCardDescription extends CardDescription {
         transform: translateZ(0.01em);
       }
     `
-  }
-
-  canDrag(move: MaterialMove, context: ItemContext) {
-    const rules = context.rules
-    if (rules.game.rule?.id === RuleId.PlayCards && isMoveItemTypeAtOnce(MaterialType.Card)(move)) {
-      const rule = new PlayCardsRule(rules.game)
-      const item = rules.material(MaterialType.Card).getItem<Card>(context.index)
-      if (item.location.player !== context.player) return false
-      const hand = rules.material(MaterialType.Card).location(LocationType.Hand).player(context.player)
-      const handIndexes = hand.getIndexes()
-      const selected = hand.selected()
-      //const movesForThisItem = rule.getPlayerMoves().filter((m) => isMoveItemTypeAtOnce(MaterialType.Card)(m) && m.indexes.includes(item.id))
-
-      if (!selected.length && move.indexes.length === 1 && move.indexes[0] === context.index) return true
-      if (!selected.length && move.indexes.length === handIndexes.length) return true
-      if (item.selected) {
-        const selectedIndexes = rules
-          .material(MaterialType.Card)
-          .location(LocationType.Hand)
-          .selected()
-          .sort(...rule.sort)!
-          .getIndexes()
-        return isEqual(move.indexes, selectedIndexes)
-      }
-
-      return false
-    }
-
-    return super.canDrag(move, context)
   }
 
   getImages() {

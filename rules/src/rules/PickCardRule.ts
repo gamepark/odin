@@ -48,7 +48,8 @@ export class PickCardRule extends BasePlayerTurn {
     const nextTable = this.nextTable
     if (nextTable.length) {
       moves.push(
-        this.nextTable.moveItemsAtOnce({
+        nextTable.moveItemsAtOnce({
+          type: LocationType.MiddleOfTable,
           id: MiddleOfTable.Current
         })
       )

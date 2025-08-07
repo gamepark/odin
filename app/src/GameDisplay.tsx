@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+import { pointerWithin } from '@dnd-kit/core'
 import { css } from '@emotion/react'
 import { GameTable, GameTableNavigation, usePlayerId } from '@gamepark/react-game'
 import { FC } from 'react'
@@ -17,7 +18,7 @@ export const GameDisplay: FC<GameDisplayProps> = ({ players }) => {
 
   return (
     <>
-      <GameTable {...size} margin={margin} css={process.env.NODE_ENV === 'development' && tableBorder}>
+      <GameTable {...size} margin={margin} css={process.env.NODE_ENV === 'development' && tableBorder} verticalCenter collisionAlgorithm={pointerWithin}>
         <GameTableNavigation css={navigationCss(players)} />
         <PlayerPanels />
         <HandSortButtons xMin={size.xMin} yMin={size.yMin} />

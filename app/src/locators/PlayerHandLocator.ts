@@ -1,11 +1,14 @@
+import { DragEndEvent, DragMoveEvent } from '@dnd-kit/core'
 import { Card, getCardColor, getCardValue } from '@gamepark/odin/material/Card'
 import { LocationType } from '@gamepark/odin/material/LocationType'
 import { MaterialType } from '@gamepark/odin/material/MaterialType'
 import { Memory } from '@gamepark/odin/rules/Memory'
+import { RuleId } from '@gamepark/odin/rules/RuleId'
 import { Sort } from '@gamepark/odin/rules/Sort'
-import { getRelativePlayerIndex, HandLocator, ItemContext, MaterialContext } from '@gamepark/react-game'
-import { Location, MaterialItem } from '@gamepark/rules-api'
+import { DropAreaDescription, getRelativePlayerIndex, HandLocator, ItemContext, MaterialContext } from '@gamepark/react-game'
+import { Location, MaterialItem, MaterialMove } from '@gamepark/rules-api'
 import orderBy from 'lodash/orderBy'
+import { gameCardDescription } from '../material/GameCardDescription'
 
 export class PlayerHandLocator extends HandLocator {
   coordinates = { x: 0, y: 1 }
@@ -121,6 +124,53 @@ export class PlayerHandLocator extends HandLocator {
 
   getHoverTransform(item: MaterialItem, context: ItemContext): string[] {
     return ['translateZ(10em)', `rotateZ(${-this.getItemRotateZ(item, context)}${this.rotationUnit})`, 'scale(2)', 'translateY(-20%)']
+  }
+
+  getLocations(context: MaterialContext) {
+    if (!context.player) return []
+    return [
+      {
+        type: LocationType.Hand,
+        player: context.player
+      }
+    ]
+  }
+
+  locationDescription = new PlayerHandDescription()
+}
+
+class PlayerHandDescription extends DropAreaDescription {
+  constructor() {
+    super({
+      height: gameCardDescription.height + 2.5,
+      width: gameCardDescription.width * 8,
+      borderRadius: 0.3
+    })
+  }
+
+  canDropItem(context: ItemContext, location: Location, dropMoves: MaterialMove[]): boolean {
+    const { rules, index } = context
+    if (rules.game.rule?.id === RuleId.PlayCards && rules.game.rule.player === context.player) {
+      const item = rules.material(MaterialType.Card).getItem(index)
+      return item.location.type === LocationType.MiddleOfTable
+    }
+    return super.canDropItem(context, location, dropMoves)
+  }
+
+  getBestDropMove(_moves: MaterialMove[], location: Location, context: ItemContext, event: DragMoveEvent | DragEndEvent) {
+    const { rules, index } = context
+    if (rules.game.rule?.id === RuleId.PlayCards && rules.game.rule.player === context.player) {
+      const card = rules.material(MaterialType.Card).index(index)
+      const item = card.getItem()!
+      if (item.location.type !== LocationType.MiddleOfTable) return
+      return card.moveItem({ type: LocationType.Hand, player: context.player })
+    }
+
+    return super.getBestDropMove(_moves, location, context, event)
+  }
+
+  canLongClick() {
+    return false
   }
 }
 
