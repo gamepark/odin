@@ -6,7 +6,7 @@ import { MaterialType } from '@gamepark/odin/material/MaterialType'
 import { CustomMoveType } from '@gamepark/odin/rules/CustomMoveType'
 import { SortHelper } from '@gamepark/odin/rules/helper/SortHelper'
 import { PlayCardsRule } from '@gamepark/odin/rules/PlayCardsRule'
-import { PlayMoveButton, shineEffect, useGame, useLegalMove, usePlayerId, usePlayerName } from '@gamepark/react-game'
+import { PlayMoveButton, shineEffect, useGame, useLegalMove, usePlay, usePlayerId, usePlayerName } from '@gamepark/react-game'
 import { isCustomMoveType, isMoveItemTypeAtOnce, MaterialGame, MaterialMove } from '@gamepark/rules-api'
 import isEqual from 'lodash/isEqual'
 import { Trans } from 'react-i18next'
@@ -19,13 +19,14 @@ export const PlayCardsHeader = () => {
   const activePlayer = rule.player
   const itsMe = playerId && playerId === activePlayer
   const name = usePlayerName(activePlayer)
+  const play = usePlay()
   const sortHelper = new SortHelper(game)
-  const selectedIndexes = rule
+  const selectedCards = rule
     .material(MaterialType.Card)
     .location(LocationType.MiddleOfTable)
     .locationId(MiddleOfTable.Next)
     .sort(...sortHelper.sortByValue)
-    .getIndexes()
+  const selectedIndexes = selectedCards.getIndexes()
 
   const placeMove = useLegalMove((move: MaterialMove) => {
     if (!isMoveItemTypeAtOnce(MaterialType.Card)(move)) return false
@@ -34,6 +35,7 @@ export const PlayCardsHeader = () => {
 
   if (itsMe) {
     const selectMove = selectedIndexes.length ? placeMove : undefined
+
     return (
       <Trans
         defaults="header.play"
@@ -54,7 +56,14 @@ export const PlayCardsHeader = () => {
               move={selectedIndexes.length ? placeMove : undefined}
             />
           ),
-          pass: <PlayMoveButton move={pass} />
+          pass: (
+            <PlayMoveButton
+              move={pass}
+              onPlay={() =>
+                selectedIndexes.length ? play(selectedCards.moveItemsAtOnce({ type: LocationType.Hand, player: playerId }), { local: true }) : undefined
+              }
+            />
+          )
         }}
       ></Trans>
     )
