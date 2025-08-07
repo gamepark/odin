@@ -3,12 +3,14 @@ import sum from 'lodash/sum'
 import { LocationType } from '../material/LocationType'
 import { MaterialType } from '../material/MaterialType'
 import { PlayerId } from '../PlayerId'
+import { CustomMoveType } from './CustomMoveType'
 import { Memory } from './Memory'
 import { RuleId } from './RuleId'
 
 export class EndOfRoundRule extends MaterialRulesPart {
   onRuleStart() {
-    const moves: MaterialMove[] = this.onRoundEnd()
+    const moves: MaterialMove[] = [this.customMove(CustomMoveType.TurnTempo, true)]
+    moves.push(...this.onRoundEnd())
 
     // Only move cards if game is not ended
     if (!moves.length) {

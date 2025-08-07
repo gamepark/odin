@@ -84,6 +84,10 @@ export class PlayCardsRule extends BasePlayerTurn {
     const moves: MaterialMove[] = []
     this.memorize(Memory.LastPlayerThatPlay, this.player)
 
+    if (this.hand.length > 0) {
+      moves.push(this.customMove(CustomMoveType.TurnTempo))
+    }
+
     moves.push(this.startRule(RuleId.PickCard))
     return moves
   }

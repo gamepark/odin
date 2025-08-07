@@ -8,7 +8,7 @@ import { RuleId } from './RuleId'
 export class PickCardRule extends BasePlayerTurn {
   onRuleStart() {
     if (this.isEndOfRound) {
-      return [this.customMove(CustomMoveType.TurnTempo, true), this.startRule(RuleId.EndOfRound)]
+      return [this.startRule(RuleId.EndOfRound)]
     }
 
     const moves: MaterialMove[] = [this.customMove(CustomMoveType.TurnTempo)]
@@ -35,34 +35,10 @@ export class PickCardRule extends BasePlayerTurn {
   }
 
   goToNextRule() {
-    const moves: MaterialMove[] = []
-    const currentTable = this.currentTable
-    if (currentTable.length) {
-      moves.push(
-        this.currentTable.moveItemsAtOnce({
-          type: LocationType.Discard
-        })
-      )
-    }
-
-    const nextTable = this.nextTable
-    if (nextTable.length) {
-      moves.push(
-        nextTable.moveItemsAtOnce({
-          type: LocationType.MiddleOfTable,
-          id: MiddleOfTable.Current
-        })
-      )
-    }
-    moves.push(this.startPlayerTurn(RuleId.PlayCards, this.nextPlayer))
-    return moves
+    return [this.startRule(RuleId.ChangePlayer)]
   }
 
   get currentTable() {
     return this.material(MaterialType.Card).location(LocationType.MiddleOfTable).locationId(MiddleOfTable.Current)
-  }
-
-  get nextTable() {
-    return this.material(MaterialType.Card).location(LocationType.MiddleOfTable).locationId(MiddleOfTable.Next)
   }
 }

@@ -11,6 +11,7 @@ import {
   SecretMaterialRules,
   TimeLimit
 } from '@gamepark/rules-api'
+import { ChangePlayerRule } from './ChangePlayerRule'
 import { LocationType } from './material/LocationType'
 import { MaterialType } from './material/MaterialType'
 import { PlayerId } from './PlayerId'
@@ -37,6 +38,7 @@ export class OdinRules
     [RuleId.PlayCards]: PlayCardsRule,
     [RuleId.DealCards]: DealCardsRule,
     [RuleId.PickCard]: PickCardRule,
+    [RuleId.ChangePlayer]: ChangePlayerRule,
     [RuleId.EndOfRound]: EndOfRoundRule
   }
 

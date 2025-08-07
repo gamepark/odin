@@ -60,7 +60,7 @@ export const PlayCardsHeader = () => {
             <PlayMoveButton
               move={pass}
               onPlay={() =>
-                selectedIndexes.length ? play(selectedCards.moveItemsAtOnce({ type: LocationType.Hand, player: playerId }), { local: true }) : undefined
+                selectedIndexes.length ? play(selectedCards.moveItemsAtOnce({ type: LocationType.Hand, player: playerId }), { transient: true }) : undefined
               }
             />
           )
