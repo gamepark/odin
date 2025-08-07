@@ -9,10 +9,9 @@ import { getWinner } from '../popup/RoundSummary'
 export const EndOfRoundHeader = () => {
   const rules = useRules<MaterialRules>()!
   const playerId = usePlayerId()
-  const activePlayer = rules.getActivePlayer()
-  const itsMe = playerId && playerId === activePlayer
   const round = rules.remind<number>(Memory.Round)
   const winner = getWinner(rules, round - 1)
+  const itsMe = playerId && playerId === winner
   const name = usePlayerName(winner)
 
   if (itsMe && winner === playerId) {

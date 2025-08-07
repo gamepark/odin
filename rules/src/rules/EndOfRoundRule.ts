@@ -13,7 +13,7 @@ export class EndOfRoundRule extends MaterialRulesPart {
     moves.push(...this.onRoundEnd())
 
     // Only move cards if game is not ended
-    if (!moves.length) {
+    if (moves.length === 1) {
       moves.push(...this.groupToDeckMove)
     }
 

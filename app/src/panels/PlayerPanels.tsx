@@ -1,7 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 import { PlayerId } from '@gamepark/odin/PlayerId'
-import { StyledPlayerPanel, usePlayers } from '@gamepark/react-game'
+import { ScoreHelper } from '@gamepark/odin/rules/helper/ScoreHelper'
+import { StyledPlayerPanel, useGame, usePlayers } from '@gamepark/react-game'
+import { MaterialGame } from '@gamepark/rules-api'
 import { createPortal } from 'react-dom'
 import Player1 from '../images/panel/player-1.jpg'
 import Player2 from '../images/panel/player-2.jpg'
@@ -9,9 +11,11 @@ import Player3 from '../images/panel/player-3.jpg'
 import Player4 from '../images/panel/player-4.jpg'
 import Player5 from '../images/panel/player-5.jpg'
 import Player6 from '../images/panel/player-6.jpg'
+import Star from '../images/panel/star.png'
 
 export const PlayerPanels = () => {
   const players = usePlayers<number>({ sortFromMe: true })
+  const game = useGame<MaterialGame>()!
   const root = document.getElementById('root')
   if (!root) {
     return null
@@ -20,7 +24,18 @@ export const PlayerPanels = () => {
   return createPortal(
     <>
       {players.map((player, index) => (
-        <StyledPlayerPanel activeRing key={player.id} player={player} css={[panelPosition(players.length, index), backgroundCss(player.id)]} />
+        <StyledPlayerPanel
+          activeRing
+          key={player.id}
+          player={player}
+          css={[panelPosition(players.length, index), backgroundCss(player.id)]}
+          counters={[
+            {
+              image: Star,
+              value: new ScoreHelper(game, player.id).score
+            }
+          ]}
+        />
       ))}
     </>,
     root

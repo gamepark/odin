@@ -82,7 +82,7 @@ type RoundSummaryLineProps = {
 const RoundSummaryLine: FC<RoundSummaryLineProps> = (props) => {
   const rules = useRules<MaterialRules>()!
   const { round } = props
-  const winner = getWinner(rules, round)
+  const winner = getWinner(rules, round + 1)
   const players = rules.game.players
   return (
     <tr>
