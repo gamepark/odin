@@ -7,6 +7,9 @@ import { isCustomMoveType, isMoveItemType, isMoveItemTypeAtOnce } from '@gamepar
 
 export const gameAnimations = new MaterialGameAnimations()
 
+gameAnimations.when().rule(RuleId.PlayCards).move(isCustomMoveType(CustomMoveType.Pass)).mine().none()
+gameAnimations.when().rule(RuleId.PlayCards).move(isCustomMoveType(CustomMoveType.Pass)).duration(1.5)
+
 gameAnimations
   .when()
   .move((move) => isCustomMoveType(CustomMoveType.TurnTempo)(move) && !move.data)

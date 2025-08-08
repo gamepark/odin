@@ -1,10 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 import { PlayerId } from '@gamepark/odin/PlayerId'
+import { CustomMoveType } from '@gamepark/odin/rules/CustomMoveType'
 import { ScoreHelper } from '@gamepark/odin/rules/helper/ScoreHelper'
-import { StyledPlayerPanel, useGame, usePlayers } from '@gamepark/react-game'
-import { MaterialGame } from '@gamepark/rules-api'
+import { StyledPlayerPanel, useAnimation, usePlayers, useRules } from '@gamepark/react-game'
+import { isCustomMoveType, MaterialMove, MaterialRules } from '@gamepark/rules-api'
 import { createPortal } from 'react-dom'
+import { useTranslation } from 'react-i18next'
 import Player1 from '../images/panel/player-1.jpg'
 import Player2 from '../images/panel/player-2.jpg'
 import Player3 from '../images/panel/player-3.jpg'
@@ -15,11 +17,16 @@ import Star from '../images/panel/star.png'
 
 export const PlayerPanels = () => {
   const players = usePlayers<number>({ sortFromMe: true })
-  const game = useGame<MaterialGame>()!
+  const { t } = useTranslation()
+  const rules = useRules<MaterialRules>()!
   const root = document.getElementById('root')
+  const animation = useAnimation<MaterialMove>((animation) => isCustomMoveType(CustomMoveType.Pass)(animation.move))
   if (!root) {
     return null
   }
+
+  const speakingPlayer = animation && rules.getActivePlayer()
+  const speak = animation ? t('speak.pass') : undefined
 
   return createPortal(
     <>
@@ -32,9 +39,10 @@ export const PlayerPanels = () => {
           counters={[
             {
               image: Star,
-              value: new ScoreHelper(game, player.id).score
+              value: new ScoreHelper(rules.game, player.id).score
             }
           ]}
+          speak={speakingPlayer === player.id && speak}
         />
       ))}
     </>,
