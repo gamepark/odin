@@ -8,7 +8,7 @@ import { Avatar, RulesDialog, usePlayerName, useRules } from '@gamepark/react-ga
 import times from 'lodash/times'
 import { FC, useEffect, useState } from 'react'
 import { Trans } from 'react-i18next'
-import { MaterialRules } from '../../../../rules-api'
+import { MaterialRules } from '@gamepark/rules-api'
 
 export const RoundSummary = () => {
   const rules = useRules<MaterialRules>()!

@@ -143,7 +143,7 @@ class GameCardDescription extends CardDescription {
     )
   }
 
-  canDragItem(context: ItemContext, legalMoves: MaterialMove[]): boolean {
+  /*canDragItem(context: ItemContext, legalMoves: MaterialMove[]): boolean {
     const { rules, index } = context
     if (rules.game.rule?.id === RuleId.PlayCards && rules.game.rule.player === context.player) {
       const card = rules.material(MaterialType.Card).index(index)
@@ -155,7 +155,7 @@ class GameCardDescription extends CardDescription {
       )
     }
     return super.canDragItem(context, legalMoves)
-  }
+  }*/
 
   canDrag(move: MaterialMove, context: ItemContext): boolean {
     if (isMoveItemTypeAtOnce(MaterialType.Card)(move)) return false

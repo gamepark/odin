@@ -11,10 +11,10 @@ import {
   SecretMaterialRules,
   TimeLimit
 } from '@gamepark/rules-api'
-import { ChangePlayerRule } from './ChangePlayerRule'
 import { LocationType } from './material/LocationType'
 import { MaterialType } from './material/MaterialType'
 import { PlayerId } from './PlayerId'
+import { ChangePlayerRule } from './rules/ChangePlayerRule'
 import { CustomMoveType } from './rules/CustomMoveType'
 import { DealCardsRule } from './rules/DealCardsRule'
 import { EndOfRoundRule } from './rules/EndOfRoundRule'

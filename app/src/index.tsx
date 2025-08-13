@@ -8,6 +8,7 @@ import ReactDOM from 'react-dom'
 import { gameAnimations } from './animations/GameAnimations'
 import App from './App'
 import { Locators } from './locators/Locators'
+import { OdinLogs } from './logs/OdinLogs'
 import { Material } from './material/Material'
 import { OdinScoringDescription } from './scoring/OdinScoringDescription'
 import translations from './translations.json'
@@ -22,6 +23,7 @@ ReactDOM.render(
       Rules={OdinRules}
       optionsSpec={OdinOptionsSpec}
       GameSetup={OdinSetup}
+      logs={new OdinLogs()}
       tutorial={new Tutorial()}
       scoring={new OdinScoringDescription()}
       material={Material}

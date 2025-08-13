@@ -3,9 +3,8 @@ import { LocationType, MiddleOfTable } from '@gamepark/odin/material/LocationTyp
 import { MaterialType } from '@gamepark/odin/material/MaterialType'
 import { PlayerId } from '@gamepark/odin/PlayerId'
 import { SortHelper } from '@gamepark/odin/rules/helper/SortHelper'
-import { RuleId } from '@gamepark/odin/rules/RuleId'
 import { DropAreaDescription, ItemContext, ListLocator, MaterialContext } from '@gamepark/react-game'
-import { Coordinates, Location, MaterialItem, MaterialMove } from '@gamepark/rules-api'
+import { Coordinates, Location, MaterialItem } from '@gamepark/rules-api'
 import { gameCardDescription } from '../material/GameCardDescription'
 
 export class MiddleOfTableLocator extends ListLocator {
@@ -52,7 +51,7 @@ class MiddlOfTableDescription extends DropAreaDescription {
     })
   }
 
-  canDropItem(context: ItemContext, location: Location, dropMoves: MaterialMove[]): boolean {
+  /*canDropItem(context: ItemContext, location: Location, dropMoves: MaterialMove[]): boolean {
     const { rules, index } = context
     if (location.id !== MiddleOfTable.Next) return false
     if (rules.game.rule?.id === RuleId.PlayCards && rules.game.rule.player === context.player) {
@@ -60,15 +59,15 @@ class MiddlOfTableDescription extends DropAreaDescription {
       return item.location.type === LocationType.Hand
     }
     return super.canDropItem(context, location, dropMoves)
-  }
+  }*/
 
-  getBestDropMove(_moves: MaterialMove[], _location: Location, context: ItemContext) {
+  /*getBestDropMove(_moves: MaterialMove[], _location: Location, context: ItemContext) {
     const { rules, index } = context
     const card = rules.material(MaterialType.Card).index(index)
     const item = card.getItem()!
     if (item.location.type !== LocationType.Hand) return
     return card.moveItem({ type: LocationType.MiddleOfTable, id: MiddleOfTable.Next })
-  }
+  }*/
 
   canLongClick() {
     return false

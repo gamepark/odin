@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 
-import { ChangePlayerRule } from '@gamepark/odin/ChangePlayerRule'
+import { ChangePlayerRule } from '@gamepark/odin/rules/ChangePlayerRule'
 import { useGame, usePlayerId, usePlayerName } from '@gamepark/react-game'
 import { MaterialGame } from '@gamepark/rules-api'
 import { Trans } from 'react-i18next'

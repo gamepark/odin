@@ -1,9 +1,10 @@
-import { MaterialMove, PlayerTurnRule } from '@gamepark/rules-api'
-import { LocationType, MiddleOfTable } from './material/LocationType'
-import { MaterialType } from './material/MaterialType'
-import { RuleId } from './rules/RuleId'
+import { MaterialMove } from '@gamepark/rules-api'
+import { LocationType, MiddleOfTable } from '../material/LocationType'
+import { MaterialType } from '../material/MaterialType'
+import { BasePlayerTurn } from './BasePlayerTurn'
+import { RuleId } from './RuleId'
 
-export class ChangePlayerRule extends PlayerTurnRule {
+export class ChangePlayerRule extends BasePlayerTurn {
   onRuleStart() {
     const moves: MaterialMove[] = []
     const currentTable = this.currentTable

@@ -107,9 +107,7 @@ export class PlayCardsRule extends BasePlayerTurn {
           })
         )
       }
-
-      moves.push(this.startPlayerTurn(RuleId.PlayCards, next))
-      return moves
+      moves.push(this.startRule(RuleId.ChangePlayer))
     } else {
       moves.push(this.startPlayerTurn(RuleId.PlayCards, this.nextPlayer))
     }

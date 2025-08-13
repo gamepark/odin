@@ -1,12 +1,10 @@
-import { DragEndEvent, DragMoveEvent } from '@dnd-kit/core'
 import { Card, getCardColor, getCardValue } from '@gamepark/odin/material/Card'
 import { LocationType } from '@gamepark/odin/material/LocationType'
 import { MaterialType } from '@gamepark/odin/material/MaterialType'
 import { Memory } from '@gamepark/odin/rules/Memory'
-import { RuleId } from '@gamepark/odin/rules/RuleId'
 import { Sort } from '@gamepark/odin/rules/Sort'
 import { DropAreaDescription, getRelativePlayerIndex, HandLocator, ItemContext, MaterialContext } from '@gamepark/react-game'
-import { Location, MaterialItem, MaterialMove } from '@gamepark/rules-api'
+import { Location, MaterialItem } from '@gamepark/rules-api'
 import orderBy from 'lodash/orderBy'
 import { gameCardDescription } from '../material/GameCardDescription'
 
@@ -148,7 +146,7 @@ class PlayerHandDescription extends DropAreaDescription {
     })
   }
 
-  canDropItem(context: ItemContext, location: Location, dropMoves: MaterialMove[]): boolean {
+  /*canDropItem(context: ItemContext, location: Location, dropMoves: MaterialMove[]): boolean {
     const { rules, index } = context
     if (rules.game.rule?.id === RuleId.PlayCards && rules.game.rule.player === context.player) {
       const item = rules.material(MaterialType.Card).getItem(index)
@@ -167,7 +165,7 @@ class PlayerHandDescription extends DropAreaDescription {
     }
 
     return super.getBestDropMove(_moves, location, context, event)
-  }
+  }*/
 
   canLongClick() {
     return false
