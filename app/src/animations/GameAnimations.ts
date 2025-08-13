@@ -24,7 +24,7 @@ gameAnimations
 gameAnimations
   .when()
   .move((move) => isCustomMoveType(CustomMoveType.TurnTempo)(move) && move.data)
-  .duration(3)
+  .duration(2)
 
 gameAnimations
   .when()
