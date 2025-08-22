@@ -90,6 +90,16 @@ export class PlayCardsRule extends BasePlayerTurn {
   onCustomMove(move: CustomMove) {
     if (!isCustomMoveType(CustomMoveType.Pass)(move)) return []
     const moves: MaterialMove[] = []
+    const nextTable = this.nextTable
+    if (nextTable.length) {
+      moves.push(
+        nextTable.moveItemsAtOnce({
+          type: LocationType.Hand,
+          player: this.player
+        })
+      )
+    }
+
     moves.push(...this.goToNextPlayer())
     return moves
   }
@@ -136,6 +146,10 @@ export class PlayCardsRule extends BasePlayerTurn {
 
   get table() {
     return this.material(MaterialType.Card).location(LocationType.MiddleOfTable).locationId(MiddleOfTable.Current)
+  }
+
+  get nextTable() {
+    return this.material(MaterialType.Card).location(LocationType.MiddleOfTable).locationId(MiddleOfTable.Next)
   }
 
   get playableCards() {
