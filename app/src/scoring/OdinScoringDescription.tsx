@@ -22,7 +22,7 @@ export class OdinScoringDescription implements ScoringDescription {
   getScoringPlayerData(key: string, player: PlayerId, rules: OdinRules): ScoringValue | null {
     const helper = new ScoreHelper(rules.game, player)
     if (key.startsWith('round.')) {
-      return helper.getRoundScore(parseInt(key.split('.')[1]) - 1) || 0
+      return helper.getRoundScore(parseInt(key.split('.')[1])) ?? 0
     }
 
     return helper.score
