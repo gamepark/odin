@@ -14,6 +14,15 @@ import { Memory } from './Memory'
 import { RuleId } from './RuleId'
 
 export class PlayCardsRule extends BasePlayerTurn {
+  onRuleStart() {
+    const table = this.table
+    const tableSize = table.length
+    const hand = this.playableCards
+
+    if (hand.length < tableSize) return [this.customMove(CustomMoveType.Pass)]
+    return []
+  }
+
   getPlayerMoves() {
     const playableCards = this.playableCards
     const table = this.table
@@ -121,10 +130,6 @@ export class PlayCardsRule extends BasePlayerTurn {
 
   get table() {
     return this.material(MaterialType.Card).location(LocationType.MiddleOfTable).locationId(MiddleOfTable.Current)
-  }
-
-  get nextTable() {
-    return this.material(MaterialType.Card).location(LocationType.MiddleOfTable).locationId(MiddleOfTable.Next)
   }
 
   get playableCards() {

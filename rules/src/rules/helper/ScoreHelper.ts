@@ -1,7 +1,5 @@
 import { MaterialGame, MaterialRulesPart } from '@gamepark/rules-api'
 import sum from 'lodash/sum'
-import { LocationType } from '../../material/LocationType'
-import { MaterialType } from '../../material/MaterialType'
 import { PlayerId } from '../../PlayerId'
 import { Memory } from '../Memory'
 
@@ -23,9 +21,5 @@ export class ScoreHelper extends MaterialRulesPart {
 
   getRoundScore(round: number): number | undefined {
     return this.remind<number[] | undefined>(Memory.PlayerScore, this.player)?.[round - 1]
-  }
-
-  get isWinning() {
-    return this.material(MaterialType.Card).location(LocationType.Hand).player(this.player).length === 0
   }
 }

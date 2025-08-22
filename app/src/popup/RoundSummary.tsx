@@ -5,22 +5,30 @@ import { ScoreHelper } from '@gamepark/odin/rules/helper/ScoreHelper'
 import { Memory } from '@gamepark/odin/rules/Memory'
 import { RuleId } from '@gamepark/odin/rules/RuleId'
 import { Avatar, RulesDialog, usePlayerName, useRules } from '@gamepark/react-game'
+import { MaterialRules } from '@gamepark/rules-api'
 import times from 'lodash/times'
 import { FC, useEffect, useState } from 'react'
 import { Trans } from 'react-i18next'
-import { MaterialRules } from '@gamepark/rules-api'
 
 export const RoundSummary = () => {
   const rules = useRules<MaterialRules>()!
   const round = rules.remind<number>(Memory.Round)
   const [open, setOpen] = useState(false)
+  const [willOpen, setWillOpen] = useState(false)
   const players = rules.game.players
   const winner = getWinner(rules, round - 1)
   useEffect(() => {
-    if (round === 1 || !rules.game.rule?.id || rules.game.rule.id !== RuleId.EndOfRound) return
+    if (round === 1 || !rules.game.rule?.id || rules.game.rule.id !== RuleId.EndOfRound || willOpen) return
     if (!open && winner) {
-      setOpen(true)
+      setWillOpen(true)
+      const timeout = setTimeout(() => {
+        setOpen(true)
+        setWillOpen(false)
+      }, 2000)
+      return () => clearTimeout(timeout)
     }
+
+    return
   }, [round, winner])
 
   const name = usePlayerName(winner)
@@ -120,6 +128,7 @@ const summaryCss = css`
   min-width: 50em;
   min-height: 24em;
   font-size: 2em;
+
   > h2 {
     width: 100%;
     text-align: center;
