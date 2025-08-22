@@ -37,6 +37,7 @@ export const PlayCardsHeader = () => {
     const selectMove = selectedIndexes.length ? placeMove : undefined
     const availableMoves: MaterialMove[] = rule.getAvailableMoves()
     const canOnlyPass = availableMoves.length === 1 && isCustomMoveType(CustomMoveType.Pass)(availableMoves[0])
+    console.log(pass)
     return (
       <Trans
         defaults="header.play"
@@ -60,7 +61,7 @@ export const PlayCardsHeader = () => {
           pass: (
             <PlayMoveButton
               move={pass}
-              disabled={!!placeMove}
+              disabled={!pass || !!placeMove}
               auto={canOnlyPass ? 5 : undefined}
               onPlay={() =>
                 selectedIndexes.length ? play(selectedCards.moveItemsAtOnce({ type: LocationType.Hand, player: playerId }), { transient: true }) : undefined
