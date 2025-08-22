@@ -4,7 +4,7 @@ import { PlayerId } from '@gamepark/odin/PlayerId'
 import { ScoreHelper } from '@gamepark/odin/rules/helper/ScoreHelper'
 import { Memory } from '@gamepark/odin/rules/Memory'
 import { RuleId } from '@gamepark/odin/rules/RuleId'
-import { Avatar, RulesDialog, usePlayerName, useRules } from '@gamepark/react-game'
+import { Avatar, RulesDialog, ThemeButton, usePlayerName, useRules } from '@gamepark/react-game'
 import { MaterialRules } from '@gamepark/rules-api'
 import times from 'lodash/times'
 import { FC, useEffect, useState } from 'react'
@@ -24,7 +24,7 @@ export const RoundSummary = () => {
       const timeout = setTimeout(() => {
         setOpen(true)
         setWillOpen(false)
-      }, 2000)
+      }, 3000)
       return () => clearTimeout(timeout)
     }
 
@@ -34,7 +34,7 @@ export const RoundSummary = () => {
   const name = usePlayerName(winner)
 
   return (
-    <RulesDialog open={open} close={() => setOpen(false)}>
+    <RulesDialog open={open}>
       <div css={summaryCss}>
         <h2>
           <Trans defaults="round.summary.title" values={{ player: name }} />
@@ -57,6 +57,11 @@ export const RoundSummary = () => {
             <RoundSummaryTotal />
           </tfoot>
         </table>
+      </div>
+      <div css={closeButtonContainerCss}>
+        <ThemeButton onClick={() => setOpen(false)}>
+          <Trans defaults="round.summary.close" />
+        </ThemeButton>
       </div>
     </RulesDialog>
   )
@@ -128,6 +133,7 @@ const summaryCss = css`
   min-width: 50em;
   min-height: 24em;
   font-size: 2em;
+  margin-bottom: 5em;
 
   > h2 {
     width: 100%;
@@ -203,4 +209,15 @@ const avatarCss = css`
   left: 50%;
   transform: translateX(-50%);
   margin-bottom: 0.5em;
+`
+
+const closeButtonContainerCss = css`
+  position: absolute;
+  bottom: 1em;
+  right: 1em;
+  display: flex;
+  align-items: flex-end;
+  justify-self: flex-end;
+
+  font-size: 2em;
 `

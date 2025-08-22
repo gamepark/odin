@@ -20,7 +20,6 @@ export class PlayCardsRule extends BasePlayerTurn {
     const hand = this.playableCards
 
     if (hand.length < tableSize) {
-      console.log(hand.length, tableSize)
       return [this.customMove(CustomMoveType.Pass)]
     }
     return []

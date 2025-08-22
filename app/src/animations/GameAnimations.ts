@@ -50,6 +50,11 @@ gameAnimations
 
 gameAnimations
   .when()
+  .move((move) => isMoveItemTypeAtOnce(MaterialType.Card)(move) && move.location.type === LocationType.MiddleOfTable && move.location.id === MiddleOfTable.Next)
+  .duration(0.7)
+
+gameAnimations
+  .when()
   .rule(RuleId.DealCards)
   .move((move) => isMoveItemType(MaterialType.Card)(move) && move.location.type === LocationType.Hand)
   .duration(0.1)
@@ -60,3 +65,21 @@ gameAnimations
   .move((move) => isMoveItemType(MaterialType.Card)(move) && move.location.type === LocationType.Hand)
   .mine()
   .duration(0.5)
+
+gameAnimations
+  .when()
+  .rule(RuleId.PickCard)
+  .move((move) => isMoveItemType(MaterialType.Card)(move) && move.location.type === LocationType.Hand)
+  .duration(0.7)
+
+gameAnimations
+  .when()
+  .move((move) => isMoveItemTypeAtOnce(MaterialType.Card)(move) && move.location.type === LocationType.Discard)
+  .duration(0.7)
+
+gameAnimations
+  .when()
+  .move(
+    (move) => isMoveItemTypeAtOnce(MaterialType.Card)(move) && move.location.type === LocationType.MiddleOfTable && move.location.id === MiddleOfTable.Current
+  )
+  .duration(0.7)
