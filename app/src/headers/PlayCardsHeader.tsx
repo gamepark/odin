@@ -37,7 +37,6 @@ export const PlayCardsHeader = () => {
     const selectMove = selectedIndexes.length ? placeMove : undefined
     const availableMoves: MaterialMove[] = rule.getAvailableMoves()
     const canOnlyPass = availableMoves.length === 1 && isCustomMoveType(CustomMoveType.Pass)(availableMoves[0])
-    console.log(pass)
     return (
       <Trans
         defaults="header.play"
