@@ -63,7 +63,7 @@ export class OdinRules
   }
 
   giveTime(): number {
-    return 60
+    return 30
   }
 
   getScore(playerId: PlayerId): number {
