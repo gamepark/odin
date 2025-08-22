@@ -70,16 +70,16 @@ gameAnimations
   .when()
   .rule(RuleId.PickCard)
   .move((move) => isMoveItemType(MaterialType.Card)(move) && move.location.type === LocationType.Hand)
-  .duration(0.7)
+  .duration(0.8)
 
 gameAnimations
   .when()
   .move((move) => isMoveItemTypeAtOnce(MaterialType.Card)(move) && move.location.type === LocationType.Discard)
-  .duration(0.7)
+  .duration(0.8)
 
 gameAnimations
   .when()
   .move(
     (move) => isMoveItemTypeAtOnce(MaterialType.Card)(move) && move.location.type === LocationType.MiddleOfTable && move.location.id === MiddleOfTable.Current
   )
-  .duration(0.7)
+  .duration(0.8)

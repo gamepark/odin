@@ -13,6 +13,12 @@ export class PickCardRule extends BasePlayerTurn {
 
     const moves: MaterialMove[] = [this.customMove(CustomMoveType.TurnTempo)]
 
+    const playerMoves = this.getPlayerMoves()
+    if (playerMoves.length === 1 && isMoveItemType(MaterialType.Card)(playerMoves[0]) && playerMoves[0].location.type === LocationType.Hand) {
+      moves.push(playerMoves[0])
+      return moves
+    }
+
     if (this.getPlayerMoves().length) return moves
     moves.push(...this.goToNextRule())
     return moves
