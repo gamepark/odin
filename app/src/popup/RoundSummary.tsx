@@ -24,7 +24,7 @@ export const RoundSummary = () => {
       const timeout = setTimeout(() => {
         setOpen(true)
         setWillOpen(false)
-      }, 3000)
+      }, 2000)
       return () => clearTimeout(timeout)
     }
 
