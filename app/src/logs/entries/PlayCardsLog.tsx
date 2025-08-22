@@ -23,7 +23,9 @@ const CardDisplay: FC<{ ids: Card[] }> = ({ ids }) => {
   return (
     <span css={cardsCss}>
       {ids.map((id) => (
-        <span css={colorCss(getCardColor(id))}>{getCardValue(id)}</span>
+        <span key={id} css={colorCss(getCardColor(id))}>
+          {getCardValue(id)}
+        </span>
       ))}
     </span>
   )
