@@ -182,10 +182,10 @@ class GameCardDescription extends CardDescription {
     if (!rules.game.tutorial) return false
     if (rules.game.tutorial.step < 4) return true
     return (
-      [12, 13, 25, 26, 27].includes(rules.game.tutorial.step) ||
+      [10, 11, 23, 24, 25].includes(rules.game.tutorial.step) ||
       ([4].includes(rules.game.tutorial.step) && item.id !== Card.Blue1) ||
-      ([14, 15].includes(rules.game.tutorial.step) && ![Card.Green2, Card.Green1].includes(item.id)) ||
-      ([21].includes(rules.game.tutorial.step) && ![Card.Orange8, Card.Orange5, Card.Orange3].includes(item.id))
+      ([12, 13].includes(rules.game.tutorial.step) && ![Card.Green2, Card.Green1].includes(item.id)) ||
+      ([20].includes(rules.game.tutorial.step) && ![Card.Orange8, Card.Orange5, Card.Orange3].includes(item.id))
     )
   }
 

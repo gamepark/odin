@@ -3,8 +3,9 @@ import { LocationType, MiddleOfTable } from '@gamepark/odin/material/LocationTyp
 import { MaterialType } from '@gamepark/odin/material/MaterialType'
 import { PlayerId } from '@gamepark/odin/PlayerId'
 import { CustomMoveType } from '@gamepark/odin/rules/CustomMoveType'
+import { RuleId } from '@gamepark/odin/rules/RuleId'
 import { MaterialTutorial, TutorialStep } from '@gamepark/react-game'
-import { isCustomMoveType, isMoveItemType, isMoveItemTypeAtOnce } from '@gamepark/rules-api'
+import { isCustomMoveType, isMoveItemType, isMoveItemTypeAtOnce, isStartRule } from '@gamepark/rules-api'
 import { Trans } from 'react-i18next'
 import { me, opponent1, opponent2, TutorialSetup } from './TutorialSetup'
 
@@ -47,7 +48,8 @@ export class Tutorial extends MaterialTutorial {
         filter: (move, game) =>
           isMoveItemTypeAtOnce(MaterialType.Card)(move) &&
           move.indexes.length === 1 &&
-          move.indexes.some((i) => game.items[MaterialType.Card]![i].id === Card.Brown6)
+          move.indexes.some((i) => game.items[MaterialType.Card]![i].id === Card.Brown6),
+        interrupt: (move) => isMoveItemType(MaterialType.Card)(move) && move.location.type === LocationType.Hand
       }
     },
     {
@@ -66,12 +68,8 @@ export class Tutorial extends MaterialTutorial {
           top: 10,
           bottom: 2
         }
-      })
-    },
-    {
-      move: {
-        player: opponent1
-      }
+      }),
+      move: {}
     },
     { popup: { text: () => <Trans defaults="tuto.opponent" components={TutoComponents} /> } },
     {
@@ -81,11 +79,6 @@ export class Tutorial extends MaterialTutorial {
           isMoveItemTypeAtOnce(MaterialType.Card)(move) &&
           move.indexes.length === 1 &&
           move.indexes.some((i) => game.items[MaterialType.Card]![i].id === Card.Orange8)
-      }
-    },
-    {
-      move: {
-        player: opponent2
       }
     },
     {
@@ -143,7 +136,8 @@ export class Tutorial extends MaterialTutorial {
         filter: (move, game) =>
           isMoveItemTypeAtOnce(MaterialType.Card)(move) &&
           move.indexes.length === 2 &&
-          move.indexes.every((i) => [Card.Green2, Card.Green1].includes(game.items[MaterialType.Card]![i].id as Card))
+          move.indexes.every((i) => [Card.Green2, Card.Green1].includes(game.items[MaterialType.Card]![i].id as Card)),
+        interrupt: (move) => isMoveItemType(MaterialType.Card)(move) && move.location.type === LocationType.Hand
       }
     },
     {
@@ -190,12 +184,15 @@ export class Tutorial extends MaterialTutorial {
       }
     },
     {
-      popup: {
-        text: () => <Trans defaults="tuto.opponent.pass" components={TutoComponents} />
-      },
       move: {
         player: opponent1,
-        filter: (move) => isCustomMoveType(CustomMoveType.Pass)(move)
+        filter: (move) => isCustomMoveType(CustomMoveType.Pass)(move),
+        interrupt: (move) => isStartRule(move) && move.id === RuleId.PlayCards
+      }
+    },
+    {
+      popup: {
+        text: () => <Trans defaults="tuto.opponent.pass" components={TutoComponents} />
       }
     },
     {
@@ -287,5 +284,5 @@ export class Tutorial extends MaterialTutorial {
       }
     }
   ]
-  version = 1
+  version = 2
 }
