@@ -15,7 +15,7 @@ const listStyle = css`
 `
 
 const HelpComponents = {
-  strong: <strong />
+  bold: <strong />
 }
 
 export const GameCardHelp = () => {
