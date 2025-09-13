@@ -22,11 +22,13 @@ export const PlayCardsLog: FC<MoveComponentProps<MaterialMove>> = (props) => {
 const CardDisplay: FC<{ ids: Card[] }> = ({ ids }) => {
   return (
     <span css={cardsCss}>
-      {ids.map((id) => (
-        <span key={id} css={colorCss(getCardColor(id))}>
-          {getCardValue(id)}
-        </span>
-      ))}
+      {ids
+        .sort((a, b) => getCardValue(b) - getCardValue(a))
+        .map((id) => (
+          <span key={id} css={colorCss(getCardColor(id))}>
+            {getCardValue(id)}
+          </span>
+        ))}
     </span>
   )
 }
