@@ -1,6 +1,6 @@
 {
   "name": "@gamepark/odin",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "The rules of Odin adapted for Game Park",
   "type": "module",
   "sideEffects": false,
