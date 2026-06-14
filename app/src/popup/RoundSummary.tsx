@@ -1,34 +1,30 @@
-/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
-import { PlayerId } from '@gamepark/odin/PlayerId'
 import { ScoreHelper } from '@gamepark/odin/rules/helper/ScoreHelper'
 import { Memory } from '@gamepark/odin/rules/Memory'
 import { RuleId } from '@gamepark/odin/rules/RuleId'
 import { Avatar, RulesDialog, ThemeButton, usePlayerName, useRules } from '@gamepark/react-game'
 import { MaterialRules } from '@gamepark/rules-api'
-import times from 'lodash/times'
-import { FC, useEffect, useState } from 'react'
+import { times } from 'es-toolkit/compat'
+import { FC, useEffect, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
+import { getWinner } from './getWinner'
 
 export const RoundSummary = () => {
   const rules = useRules<MaterialRules>()!
   const round = rules.remind<number>(Memory.Round)
   const [open, setOpen] = useState(false)
-  const [willOpen, setWillOpen] = useState(false)
+  const willOpen = useRef(false)
   const players = rules.game.players
   const winner = getWinner(rules, round - 1)
   useEffect(() => {
-    if (round === 1 || !rules.game.rule?.id || rules.game.rule.id !== RuleId.EndOfRound || willOpen) return
-    if (!open && winner) {
-      setWillOpen(true)
-      const timeout = setTimeout(() => {
-        setOpen(true)
-        setWillOpen(false)
-      }, 2000)
-      return () => clearTimeout(timeout)
-    }
-
-    return
+    if (round === 1 || rules.game.rule?.id !== RuleId.EndOfRound || willOpen.current || open || !winner) return
+    willOpen.current = true
+    const timeout = setTimeout(() => {
+      setOpen(true)
+      willOpen.current = false
+    }, 2000)
+    return () => clearTimeout(timeout)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [round, winner])
 
   const name = usePlayerName(winner)
@@ -37,7 +33,7 @@ export const RoundSummary = () => {
     <RulesDialog open={open}>
       <div css={summaryCss}>
         <h2>
-          <Trans defaults="round.summary.title" values={{ player: name }} />
+          <Trans i18nKey="round.summary.title" values={{ player: name }} />
         </h2>
         <table css={tableCss} cellSpacing={0}>
           <thead>
@@ -60,15 +56,11 @@ export const RoundSummary = () => {
       </div>
       <div css={closeButtonContainerCss}>
         <ThemeButton onClick={() => setOpen(false)}>
-          <Trans defaults="round.summary.close" />
+          <Trans i18nKey="round.summary.close" />
         </ThemeButton>
       </div>
     </RulesDialog>
   )
-}
-
-export const getWinner = (rules: MaterialRules, round: number): PlayerId => {
-  return rules.game.players.find((p) => new ScoreHelper(rules.game, p).isWinningRound(round))!
 }
 
 type RoundSummaryPlayerProps = {
@@ -100,7 +92,7 @@ const RoundSummaryLine: FC<RoundSummaryLineProps> = (props) => {
   return (
     <tr>
       <td css={roundCss}>
-        <Trans defaults="score.round" values={{ round: round + 1 }} />
+        <Trans i18nKey="score.round" values={{ round: round + 1 }} />
       </td>
       {players.map((p) => (
         <td css={[scoreCss, winner === p ? highlightCss : undefined]} key={p}>
@@ -118,7 +110,7 @@ const RoundSummaryTotal: FC = () => {
   return (
     <tr>
       <td css={roundCss}>
-        <Trans defaults="score.total" />
+        <Trans i18nKey="score.total" />
       </td>
       {players.map((p) => (
         <td css={totalCss} key={p}>

@@ -2,8 +2,8 @@
   "name": "@gamepark/odin",
   "version": "1.1.0",
   "description": "The rules of Odin adapted for Game Park",
-  "type": "module",
   "sideEffects": false,
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -15,19 +15,19 @@
     "access": "public"
   },
   "scripts": {
+    "test": "vitest",
     "build": "tsc",
     "prepublishOnly": "tsc",
     "publish": "lerna publish",
     "lint": "eslint --fix"
   },
   "peerDependencies": {
-    "@gamepark/rules-api": ">=6.33",
-    "lodash": ">=4.17"
+    "@gamepark/rules-api": ">=7",
+    "es-toolkit": "^1.43.0"
   },
   "devDependencies": {
-    "@gamepark/rules-api": "~6.38.5",
-    "@types/lodash": "^4.17.7",
-    "i18next": "^22.0.3",
-    "lodash": "^4.17.21"
+    "@gamepark/rules-api": "~7.6.3",
+    "es-toolkit": "^1.45.1",
+    "vitest": "^4.0.18"
   }
 }

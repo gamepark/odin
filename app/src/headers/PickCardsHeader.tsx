@@ -1,5 +1,3 @@
-/** @jsxImportSource @emotion/react */
-
 import { LocationType } from '@gamepark/odin/material/LocationType'
 import { MaterialType } from '@gamepark/odin/material/MaterialType'
 import { PlayCardsRule } from '@gamepark/odin/rules/PlayCardsRule'
@@ -21,8 +19,8 @@ export const PickCardsHeader = () => {
   if (currentTable === 1) return <PlayCardsHeader />
 
   if (itsMe) {
-    return <Trans defaults="header.take"></Trans>
+    return <Trans i18nKey="header.take"></Trans>
   }
 
-  return <Trans defaults="header.take.other" values={{ player: name }} />
+  return <Trans i18nKey="header.take.other" values={{ player: name }} />
 }

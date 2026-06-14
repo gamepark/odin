@@ -21,12 +21,12 @@ export class Tutorial extends MaterialTutorial {
   setup = new TutorialSetup()
   players = [{ id: me }, { id: opponent1 }, { id: opponent2 }]
   steps: TutorialStep<PlayerId, MaterialType, LocationType>[] = [
-    { popup: { text: () => <Trans defaults="tuto.welcome" components={TutoComponents} /> } },
-    { popup: { text: () => <Trans defaults="tuto.goal" components={TutoComponents} /> } },
-    { popup: { text: () => <Trans defaults="tuto.round" components={TutoComponents} /> } },
-    { popup: { text: () => <Trans defaults="tuto.end" components={TutoComponents} /> } },
+    { popup: { text: () => <Trans i18nKey="tuto.welcome" components={TutoComponents} /> } },
+    { popup: { text: () => <Trans i18nKey="tuto.goal" components={TutoComponents} /> } },
+    { popup: { text: () => <Trans i18nKey="tuto.round" components={TutoComponents} /> } },
+    { popup: { text: () => <Trans i18nKey="tuto.end" components={TutoComponents} /> } },
     {
-      popup: { text: () => <Trans defaults="tuto.go" components={TutoComponents} />, position: { y: -20 } },
+      popup: { text: () => <Trans i18nKey="tuto.go" components={TutoComponents} />, position: { y: -20 } },
       focus: (game) => {
         return {
           materials: [this.material(game, MaterialType.Card).location(LocationType.MiddleOfTable), this.material(game, MaterialType.Card).id(Card.Blue1)],
@@ -41,7 +41,7 @@ export class Tutorial extends MaterialTutorial {
         filter: (move, game) => isMoveItemTypeAtOnce(MaterialType.Card)(move) && move.indexes.some((i) => game.items[MaterialType.Card]![i].id === Card.Blue1)
       }
     },
-    { popup: { text: () => <Trans defaults="tuto.choice" components={TutoComponents} /> } },
+    { popup: { text: () => <Trans i18nKey="tuto.choice" components={TutoComponents} /> } },
     {
       move: {
         player: opponent1,
@@ -54,7 +54,7 @@ export class Tutorial extends MaterialTutorial {
     },
     {
       popup: {
-        text: () => <Trans defaults="tuto.more" components={TutoComponents} />,
+        text: () => <Trans i18nKey="tuto.more" components={TutoComponents} />,
         position: {
           y: -20
         },
@@ -71,7 +71,7 @@ export class Tutorial extends MaterialTutorial {
       }),
       move: {}
     },
-    { popup: { text: () => <Trans defaults="tuto.opponent" components={TutoComponents} /> } },
+    { popup: { text: () => <Trans i18nKey="tuto.opponent" components={TutoComponents} /> } },
     {
       move: {
         player: opponent2,
@@ -82,7 +82,7 @@ export class Tutorial extends MaterialTutorial {
       }
     },
     {
-      popup: { text: () => <Trans defaults="tuto.you" components={TutoComponents} />, position: { x: 20, y: -20 } },
+      popup: { text: () => <Trans i18nKey="tuto.you" components={TutoComponents} />, position: { x: 20, y: -20 } },
       focus: (game) => {
         return {
           materials: [
@@ -98,7 +98,7 @@ export class Tutorial extends MaterialTutorial {
       }
     },
     {
-      popup: { text: () => <Trans defaults="tuto.constraint" components={TutoComponents} />, position: { x: 20, y: -20 } },
+      popup: { text: () => <Trans i18nKey="tuto.constraint" components={TutoComponents} />, position: { x: 20, y: -20 } },
       focus: (game) => {
         return {
           materials: [
@@ -114,7 +114,7 @@ export class Tutorial extends MaterialTutorial {
       }
     },
     {
-      popup: { text: () => <Trans defaults="tuto.twocards" components={TutoComponents} />, position: { x: 20, y: -20 } },
+      popup: { text: () => <Trans i18nKey="tuto.twocards" components={TutoComponents} />, position: { x: 20, y: -20 } },
       focus: (game) => {
         return {
           materials: [
@@ -142,7 +142,7 @@ export class Tutorial extends MaterialTutorial {
     },
     {
       popup: {
-        text: () => <Trans defaults="tuto.play.2.expl" components={TutoComponents} />,
+        text: () => <Trans i18nKey="tuto.play.2.expl" components={TutoComponents} />,
         position: {
           y: -20
         },
@@ -162,7 +162,7 @@ export class Tutorial extends MaterialTutorial {
     },
     {
       popup: {
-        text: () => <Trans defaults="tuto.pick" components={TutoComponents} />,
+        text: () => <Trans i18nKey="tuto.pick" components={TutoComponents} />,
         position: {
           y: -20,
           x: 20
@@ -192,7 +192,7 @@ export class Tutorial extends MaterialTutorial {
     },
     {
       popup: {
-        text: () => <Trans defaults="tuto.opponent.pass" components={TutoComponents} />
+        text: () => <Trans i18nKey="tuto.opponent.pass" components={TutoComponents} />
       }
     },
     {
@@ -206,7 +206,7 @@ export class Tutorial extends MaterialTutorial {
     },
     {
       popup: {
-        text: () => <Trans defaults="tuto.threecards" components={TutoComponents} />,
+        text: () => <Trans i18nKey="tuto.threecards" components={TutoComponents} />,
         position: {
           y: -20
         },
@@ -229,7 +229,7 @@ export class Tutorial extends MaterialTutorial {
     },
     {
       popup: {
-        text: () => <Trans defaults="tuto.more.2" components={TutoComponents} />,
+        text: () => <Trans i18nKey="tuto.more.2" components={TutoComponents} />,
         position: { y: -20 }
       },
       focus: (game) => {
@@ -251,7 +251,7 @@ export class Tutorial extends MaterialTutorial {
     },
     {
       popup: {
-        text: () => <Trans defaults="tuto.pick.2" components={TutoComponents} />
+        text: () => <Trans i18nKey="tuto.pick.2" components={TutoComponents} />
       },
       move: {}
     },
@@ -269,17 +269,17 @@ export class Tutorial extends MaterialTutorial {
     },
     {
       popup: {
-        text: () => <Trans defaults="tuto.allpass" components={TutoComponents} />
+        text: () => <Trans i18nKey="tuto.allpass" components={TutoComponents} />
       }
     },
     {
       popup: {
-        text: () => <Trans defaults="tuto.start" components={TutoComponents} />
+        text: () => <Trans i18nKey="tuto.start" components={TutoComponents} />
       }
     },
     {
       popup: {
-        text: () => <Trans defaults="tuto.endtrigger" components={TutoComponents} />,
+        text: () => <Trans i18nKey="tuto.endtrigger" components={TutoComponents} />,
         size: { width: 100 }
       }
     }

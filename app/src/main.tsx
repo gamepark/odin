@@ -1,22 +1,18 @@
-/** @jsxImportSource @emotion/react */
 import { OdinOptionsSpec } from '@gamepark/odin/OdinOptions'
 import { OdinRules } from '@gamepark/odin/OdinRules'
 import { OdinSetup } from '@gamepark/odin/OdinSetup'
-import { GameProvider, setupTranslation } from '@gamepark/react-game'
+import { GameProvider } from '@gamepark/react-game'
 import { StrictMode } from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import { gameAnimations } from './animations/GameAnimations'
 import App from './App'
 import { Locators } from './locators/Locators'
 import { OdinLogs } from './logs/OdinLogs'
 import { Material } from './material/Material'
 import { OdinScoringDescription } from './scoring/OdinScoringDescription'
-import translations from './translations.json'
 import { Tutorial } from './tutorial/Tutorial'
 
-setupTranslation(translations, { debug: false })
-
-ReactDOM.render(
+createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <GameProvider
       game="odin"
@@ -32,6 +28,5 @@ ReactDOM.render(
     >
       <App />
     </GameProvider>
-  </StrictMode>,
-  document.getElementById('root')
+  </StrictMode>
 )

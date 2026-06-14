@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 import { faArrowUp19 } from '@fortawesome/free-solid-svg-icons/faArrowUp19'
 import { faArrowDown19 } from '@fortawesome/free-solid-svg-icons/faArrowDown19'

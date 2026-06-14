@@ -11,5 +11,5 @@ export const AllPassedLog: FC<MoveComponentProps<MaterialMove>> = (props) => {
   rule.play(move)
   const player = rule.nextPlayer
   const name = usePlayerName(player)
-  return <Trans defaults="logs.all-pass" values={{ player: name }} />
+  return <Trans i18nKey="logs.all-pass" values={{ player: name }} />
 }

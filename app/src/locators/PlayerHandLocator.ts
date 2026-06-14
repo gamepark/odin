@@ -5,7 +5,7 @@ import { Memory } from '@gamepark/odin/rules/Memory'
 import { Sort } from '@gamepark/odin/rules/Sort'
 import { DropAreaDescription, getRelativePlayerIndex, HandLocator, ItemContext, MaterialContext } from '@gamepark/react-game'
 import { Location, MaterialItem } from '@gamepark/rules-api'
-import orderBy from 'lodash/orderBy'
+import { orderBy } from 'es-toolkit/compat'
 import { gameCardDescription } from '../material/GameCardDescription'
 
 export class PlayerHandLocator extends HandLocator {
@@ -118,6 +118,12 @@ export class PlayerHandLocator extends HandLocator {
       ]).indexOf(index)
     }
     return item.location.x!
+  }
+
+  getPositionDependencies(location: Location, context: MaterialContext) {
+    // Card positions in the player's own hand depend on the chosen sort order (stored in Memory.HandSort),
+    // not only on the number of cards. Include it so positions are recomputed when the sort changes.
+    return [this.countItems(location, context), context.rules.remind<number | undefined>(Memory.HandSort) ?? Sort.ValueDesc]
   }
 
   getHoverTransform(item: MaterialItem, context: ItemContext): string[] {

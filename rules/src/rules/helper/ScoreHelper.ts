@@ -1,5 +1,5 @@
 import { MaterialGame, MaterialRulesPart } from '@gamepark/rules-api'
-import sum from 'lodash/sum'
+import { sum } from 'es-toolkit/compat'
 import { PlayerId } from '../../PlayerId'
 import { Memory } from '../Memory'
 

@@ -7,5 +7,5 @@ export const PassLog: FC<MoveComponentProps<MaterialMove>> = (props) => {
   const { context } = props
   const player = context.action.playerId
   const name = usePlayerName(player)
-  return <Trans defaults="logs.pass" values={{ player: name }} />
+  return <Trans i18nKey="logs.pass" values={{ player: name }} />
 }

@@ -1,5 +1,3 @@
-/** @jsxImportSource @emotion/react */
-
 import { css } from '@emotion/react'
 import { LocationType, MiddleOfTable } from '@gamepark/odin/material/LocationType'
 import { MaterialType } from '@gamepark/odin/material/MaterialType'
@@ -8,7 +6,7 @@ import { SortHelper } from '@gamepark/odin/rules/helper/SortHelper'
 import { PlayCardsRule } from '@gamepark/odin/rules/PlayCardsRule'
 import { PlayMoveButton, shineEffect, useGame, useLegalMove, usePlay, usePlayerId, usePlayerName } from '@gamepark/react-game'
 import { isCustomMoveType, isMoveItemTypeAtOnce, MaterialGame, MaterialMove } from '@gamepark/rules-api'
-import isEqual from 'lodash/isEqual'
+import { isEqual } from 'es-toolkit/compat'
 import { Trans } from 'react-i18next'
 
 export const PlayCardsHeader = () => {
@@ -39,7 +37,7 @@ export const PlayCardsHeader = () => {
     const canOnlyPass = availableMoves.length === 1 && isCustomMoveType(CustomMoveType.Pass)(availableMoves[0])
     return (
       <Trans
-        defaults="header.play"
+        i18nKey="header.play"
         values={{ count: selectedIndexes.length }}
         components={{
           play: (
@@ -72,5 +70,5 @@ export const PlayCardsHeader = () => {
     )
   }
 
-  return <Trans defaults="header.play.other" values={{ player: name }} />
+  return <Trans i18nKey="header.play.other" values={{ player: name }} />
 }

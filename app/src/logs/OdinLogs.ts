@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 import { LocationType, MiddleOfTable } from '@gamepark/odin/material/LocationType'
 import { MaterialType } from '@gamepark/odin/material/MaterialType'

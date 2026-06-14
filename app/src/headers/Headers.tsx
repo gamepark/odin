@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { RuleId } from '@gamepark/odin/rules/RuleId'
 import { ComponentType } from 'react'
 import { ChangePlayerHeader } from './ChangePlayerHeader'

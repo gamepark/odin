@@ -1,5 +1,5 @@
 import { isMoveItemTypeAtOnce, isShuffleItemType, ItemMove, MaterialMove, MaterialRulesPart } from '@gamepark/rules-api'
-import sum from 'lodash/sum'
+import { sum } from 'es-toolkit/compat'
 import { LocationType } from '../material/LocationType'
 import { MaterialType } from '../material/MaterialType'
 import { PlayerId } from '../PlayerId'

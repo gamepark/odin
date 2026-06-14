@@ -3,7 +3,7 @@ import { PlayerId } from '@gamepark/odin/PlayerId'
 import { ScoreHelper } from '@gamepark/odin/rules/helper/ScoreHelper'
 import { Memory } from '@gamepark/odin/rules/Memory'
 import { ScoringDescription, ScoringValue } from '@gamepark/react-game'
-import times from 'lodash/times'
+import { times } from 'es-toolkit/compat'
 import { Trans } from 'react-i18next'
 
 export class OdinScoringDescription implements ScoringDescription {
@@ -13,10 +13,10 @@ export class OdinScoringDescription implements ScoringDescription {
 
   getScoringHeader(key: string): ScoringValue {
     if (key.startsWith('round.')) {
-      return <Trans defaults="score.round" values={{ round: key.split('.')[1] }} />
+      return <Trans i18nKey="score.round" values={{ round: key.split('.')[1] }} />
     }
 
-    return <Trans defaults="score.total" />
+    return <Trans i18nKey="score.total" />
   }
 
   getScoringPlayerData(key: string, player: PlayerId, rules: OdinRules): ScoringValue | null {

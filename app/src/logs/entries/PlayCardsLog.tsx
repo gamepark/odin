@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 import { Card, CardColor, getCardColor, getCardValue } from '@gamepark/odin/material/Card'
 import { MaterialType } from '@gamepark/odin/material/MaterialType'
@@ -16,7 +15,7 @@ export const PlayCardsLog: FC<MoveComponentProps<MaterialMove>> = (props) => {
   const rule = new PlayCardsRule(context.game)
   const cards = rule.material(MaterialType.Card).index(move.indexes).getItems()
   const ids = move.reveal ? Object.values(move.reveal).map((o) => o.id as Card) : cards.map((c) => c.id as Card)
-  return <Trans defaults="logs.play-cards" values={{ player: name }} components={{ cards: <CardDisplay ids={ids} /> }} />
+  return <Trans i18nKey="logs.play-cards" values={{ player: name }} components={{ cards: <CardDisplay ids={ids} /> }} />
 }
 
 const CardDisplay: FC<{ ids: Card[] }> = ({ ids }) => {

@@ -1,5 +1,5 @@
 import { PlayerTurnRule } from '@gamepark/rules-api'
-import orderBy from 'lodash/orderBy'
+import { orderBy } from 'es-toolkit/compat'
 import { PlayerId } from '../PlayerId'
 import { Memory } from './Memory'
 

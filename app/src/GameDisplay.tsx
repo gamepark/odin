@@ -1,7 +1,6 @@
-/** @jsxImportSource @emotion/react */
 import { pointerWithin } from '@dnd-kit/core'
 import { css } from '@emotion/react'
-import { GameTable, GameTableNavigation, usePlayerId } from '@gamepark/react-game'
+import { DevToolsHub, GameTable, GameTableNavigation, usePlayerId } from '@gamepark/react-game'
 import { FC } from 'react'
 import { PlayerPanels } from './panels/PlayerPanels'
 import { RoundSummary } from './popup/RoundSummary'
@@ -23,6 +22,7 @@ export const GameDisplay: FC<GameDisplayProps> = ({ players }) => {
         <PlayerPanels />
         <HandSortButtons xMin={size.xMin} yMin={size.yMin} />
       </GameTable>
+      {import.meta.env.DEV && <DevToolsHub />}
       <RoundSummary />
     </>
   )

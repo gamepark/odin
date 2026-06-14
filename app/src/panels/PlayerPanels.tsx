@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 import { PlayerId } from '@gamepark/odin/PlayerId'
 import { CustomMoveType } from '@gamepark/odin/rules/CustomMoveType'

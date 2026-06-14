@@ -1,11 +1,9 @@
-/** @jsxImportSource @emotion/react */
-
 import { EndHelper } from '@gamepark/odin/rules/helper/EndHelper'
 import { Memory } from '@gamepark/odin/rules/Memory'
 import { usePlayerId, usePlayerName, useRules } from '@gamepark/react-game'
 import { MaterialRules } from '@gamepark/rules-api'
 import { Trans } from 'react-i18next'
-import { getWinner } from '../popup/RoundSummary'
+import { getWinner } from '../popup/getWinner'
 
 export const EndOfRoundHeader = () => {
   const rules = useRules<MaterialRules>()!
@@ -17,8 +15,8 @@ export const EndOfRoundHeader = () => {
   const name = usePlayerName(winner)
 
   if (itsMe && winner === playerId) {
-    return <Trans defaults="header.win.me"></Trans>
+    return <Trans i18nKey="header.win.me"></Trans>
   }
 
-  return <Trans defaults="header.win.other" values={{ player: name }} />
+  return <Trans i18nKey="header.win.other" values={{ player: name }} />
 }

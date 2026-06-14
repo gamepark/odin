@@ -1,5 +1,4 @@
-/** @jsxImportSource @emotion/react */
-import { FailuresDialog, FullscreenDialog, LoadingScreen, MaterialHeader, MaterialImageLoader, Menu, useGame } from '@gamepark/react-game'
+import { FailuresDialog, FullscreenDialog, LoadingScreen, MaterialGameSounds, MaterialHeader, MaterialImageLoader, Menu, useGame } from '@gamepark/react-game'
 import { MaterialGame } from '@gamepark/rules-api'
 import { useEffect, useState } from 'react'
 import { GameDisplay } from './GameDisplay'
@@ -16,9 +15,10 @@ export default function App() {
   return (
     <>
       {!!game && <GameDisplay players={game.players.length} />}
-      <LoadingScreen display={loading} author={['Gary Kim', 'Hope S. Hwang', 'Yohan Goh']} artist="Crocotame" publisher="Helvetiq" developer="Game Park" />
+      <LoadingScreen display={loading} />
       <MaterialHeader rulesStepsHeaders={Headers} loading={loading} />
       <MaterialImageLoader onImagesLoad={() => setImagesLoading(false)} />
+      <MaterialGameSounds />
       <Menu />
       <FailuresDialog />
       <FullscreenDialog />

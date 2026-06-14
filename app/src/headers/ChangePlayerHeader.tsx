@@ -1,5 +1,3 @@
-/** @jsxImportSource @emotion/react */
-
 import { ChangePlayerRule } from '@gamepark/odin/rules/ChangePlayerRule'
 import { useGame, usePlayerId, usePlayerName } from '@gamepark/react-game'
 import { MaterialGame } from '@gamepark/rules-api'
@@ -14,8 +12,8 @@ export const ChangePlayerHeader = () => {
   const name = usePlayerName(rules.nextPlayer)
 
   if (itsMe) {
-    return <Trans defaults="header.change-player.me"></Trans>
+    return <Trans i18nKey="header.change-player.me"></Trans>
   }
 
-  return <Trans defaults="header.change-player.other" values={{ player: name }} />
+  return <Trans i18nKey="header.change-player.other" values={{ player: name }} />
 }
