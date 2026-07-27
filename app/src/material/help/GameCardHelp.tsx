@@ -69,7 +69,7 @@ export const GameCardHelp = () => {
           <Trans i18nKey="help.endround" components={HelpComponents} />
         </h2>
         <p>
-          <Trans i18nKey="help.endturn.how" components={HelpComponents} />
+          <Trans i18nKey="help.endround.how" components={HelpComponents} />
         </p>
         <ul css={listStyle}>
           <li>
