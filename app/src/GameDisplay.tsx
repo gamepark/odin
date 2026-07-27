@@ -21,8 +21,8 @@ export const GameDisplay: FC<GameDisplayProps> = ({ players }) => {
         <GameTableNavigation css={navigationCss(players)} />
         <PlayerPanels />
         <HandSortButtons xMin={size.xMin} yMin={size.yMin} />
+        {process.env.NODE_ENV === 'development' && <DevToolsHub fabBottom="calc(5em)" />}
       </GameTable>
-      {import.meta.env.DEV && <DevToolsHub />}
       <RoundSummary />
     </>
   )

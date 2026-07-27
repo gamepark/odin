@@ -23,15 +23,24 @@ export class MiddleOfTableLocator extends ListLocator {
   }
 
   getItemIndex(item: MaterialItem<PlayerId, LocationType, Card>, context: ItemContext): number {
+    return this.getSortedCards(item.location, context).indexOf(item.id)
+  }
+
+  getPositionDependencies(location: Location, context: MaterialContext) {
+    // The index of a card in the row depends on the value of every other card in the same area (see getItemIndex),
+    // not only on their number: declare the sorted ids so cards reposition whenever the combination changes.
+    return this.getSortedCards(location, context)
+  }
+
+  private getSortedCards(location: Location, context: MaterialContext): (Card | undefined)[] {
     const sortHelper = new SortHelper(context.rules.game)
-    const cards = context.rules
+    return context.rules
       .material(MaterialType.Card)
-      .location(item.location.type)
-      .locationId(item.location.id)
+      .location(location.type)
+      .locationId(location.id)
       .sort(...sortHelper.sortByValue)
       .getItems<Card>()
       .map((item) => item.id)
-    return cards.indexOf(item.id)
   }
 
   location = {
