@@ -1,4 +1,4 @@
-import { OdinOptionsSpec } from '@gamepark/odin/OdinOptions'
+import { OdinOptionsSpecV2 } from '@gamepark/odin/OdinOptions'
 import { OdinRules } from '@gamepark/odin/OdinRules'
 import { OdinSetup } from '@gamepark/odin/OdinSetup'
 import { GameProvider } from '@gamepark/react-game'
@@ -17,7 +17,7 @@ createRoot(document.getElementById('root')!).render(
     <GameProvider
       game="odin"
       Rules={OdinRules}
-      optionsSpec={OdinOptionsSpec}
+      optionsSpec={OdinOptionsSpecV2}
       GameSetup={OdinSetup}
       logs={new OdinLogs()}
       tutorial={new Tutorial()}

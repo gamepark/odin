@@ -1,3 +1,3 @@
 export { OdinRules } from './OdinRules'
-export { OdinOptionsSpec } from './OdinOptions'
+export { OdinOptionsSpecV2 } from './OdinOptions'
 export { OdinSetup } from './OdinSetup'
