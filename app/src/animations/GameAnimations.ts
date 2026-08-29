@@ -2,84 +2,86 @@ import { LocationType, MiddleOfTable } from '@gamepark/odin/material/LocationTyp
 import { MaterialType } from '@gamepark/odin/material/MaterialType'
 import { CustomMoveType } from '@gamepark/odin/rules/CustomMoveType'
 import { RuleId } from '@gamepark/odin/rules/RuleId'
-import { MaterialGameAnimations } from '@gamepark/react-game'
+import { and, isMyMove, isRule, MaterialGameAnimations } from '@gamepark/react-game'
 import { isCustomMoveType, isMoveItemType, isMoveItemTypeAtOnce } from '@gamepark/rules-api'
 
 export const gameAnimations = new MaterialGameAnimations()
 
-gameAnimations.when().rule(RuleId.PlayCards).move(isCustomMoveType(CustomMoveType.Pass)).mine().none()
-gameAnimations.when().rule(RuleId.PlayCards).move(isCustomMoveType(CustomMoveType.Pass)).duration(1.5)
+gameAnimations.configure(and(isRule(RuleId.PlayCards), isCustomMoveType(CustomMoveType.Pass), isMyMove())).skip()
+gameAnimations.configure(and(isRule(RuleId.PlayCards), isCustomMoveType(CustomMoveType.Pass))).duration(1500)
 
 gameAnimations
-  .when()
-  .move((move) => isCustomMoveType(CustomMoveType.TurnTempo)(move) && !move.data)
-  .mine()
-  .none()
+  .configure(and(
+    (move) => isCustomMoveType(CustomMoveType.TurnTempo)(move) && !move.data,
+    isMyMove()
+  ))
+  .skip()
 
 gameAnimations
-  .when()
-  .move((move) => isCustomMoveType(CustomMoveType.TurnTempo)(move) && !move.data)
-  .duration(1)
+  .configure((move) => isCustomMoveType(CustomMoveType.TurnTempo)(move) && !move.data)
+  .duration(1000)
 
 gameAnimations
-  .when()
-  .move((move) => isCustomMoveType(CustomMoveType.TurnTempo)(move) && move.data)
-  .duration(2)
+  .configure((move) => isCustomMoveType(CustomMoveType.TurnTempo)(move) && move.data)
+  .duration(2000)
 
 gameAnimations
-  .when()
-  .move((move) => isMoveItemType(MaterialType.Card)(move) && move.location.type === LocationType.MiddleOfTable && move.location.id === MiddleOfTable.Next)
-  .mine()
-  .duration(0.2)
+  .configure(and(
+    (move) => isMoveItemType(MaterialType.Card)(move) && move.location.type === LocationType.MiddleOfTable && move.location.id === MiddleOfTable.Next,
+    isMyMove()
+  ))
+  .duration(200)
 
 gameAnimations
-  .when()
-  .move((move, context) => {
-    if (!isMoveItemType(MaterialType.Card)(move) || move.location.type !== LocationType.Hand) return false
-    const item = context.rules.material(MaterialType.Card).getItem(move.itemIndex)
-    return item.location.type === LocationType.MiddleOfTable && item.location.id === MiddleOfTable.Next
-  })
-  .mine()
-  .duration(0.2)
+  .configure(and(
+    (move, context) => {
+      if (!isMoveItemType(MaterialType.Card)(move) || move.location.type !== LocationType.Hand) return false
+      const item = context.rules.material(MaterialType.Card).getItem(move.itemIndex)
+      return item.location.type === LocationType.MiddleOfTable && item.location.id === MiddleOfTable.Next
+    },
+    isMyMove()
+  ))
+  .duration(200)
 
 gameAnimations
-  .when()
-  .move((move) => isMoveItemTypeAtOnce(MaterialType.Card)(move) && move.location.type === LocationType.MiddleOfTable && move.location.id === MiddleOfTable.Next)
-  .mine()
-  .none()
+  .configure(and(
+    (move) => isMoveItemTypeAtOnce(MaterialType.Card)(move) && move.location.type === LocationType.MiddleOfTable && move.location.id === MiddleOfTable.Next,
+    isMyMove()
+  ))
+  .skip()
 
 gameAnimations
-  .when()
-  .move((move) => isMoveItemTypeAtOnce(MaterialType.Card)(move) && move.location.type === LocationType.MiddleOfTable && move.location.id === MiddleOfTable.Next)
-  .duration(0.7)
+  .configure((move) => isMoveItemTypeAtOnce(MaterialType.Card)(move) && move.location.type === LocationType.MiddleOfTable && move.location.id === MiddleOfTable.Next)
+  .duration(700)
 
 gameAnimations
-  .when()
-  .rule(RuleId.DealCards)
-  .move((move) => isMoveItemType(MaterialType.Card)(move) && move.location.type === LocationType.Hand)
-  .duration(0.1)
+  .configure(and(
+    isRule(RuleId.DealCards),
+    (move) => isMoveItemType(MaterialType.Card)(move) && move.location.type === LocationType.Hand
+  ))
+  .duration(100)
 
 gameAnimations
-  .when()
-  .rule(RuleId.PickCard)
-  .move((move) => isMoveItemType(MaterialType.Card)(move) && move.location.type === LocationType.Hand)
-  .mine()
-  .duration(0.5)
+  .configure(and(
+    isRule(RuleId.PickCard),
+    (move) => isMoveItemType(MaterialType.Card)(move) && move.location.type === LocationType.Hand,
+    isMyMove()
+  ))
+  .duration(500)
 
 gameAnimations
-  .when()
-  .rule(RuleId.PickCard)
-  .move((move) => isMoveItemType(MaterialType.Card)(move) && move.location.type === LocationType.Hand)
-  .duration(0.7)
+  .configure(and(
+    isRule(RuleId.PickCard),
+    (move) => isMoveItemType(MaterialType.Card)(move) && move.location.type === LocationType.Hand
+  ))
+  .duration(700)
 
 gameAnimations
-  .when()
-  .move((move) => isMoveItemTypeAtOnce(MaterialType.Card)(move) && move.location.type === LocationType.Discard)
-  .duration(0.7)
+  .configure((move) => isMoveItemTypeAtOnce(MaterialType.Card)(move) && move.location.type === LocationType.Discard)
+  .duration(700)
 
 gameAnimations
-  .when()
-  .move(
+  .configure(
     (move) => isMoveItemTypeAtOnce(MaterialType.Card)(move) && move.location.type === LocationType.MiddleOfTable && move.location.id === MiddleOfTable.Current
   )
-  .duration(0.7)
+  .duration(700)
