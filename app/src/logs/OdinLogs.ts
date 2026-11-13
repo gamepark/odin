@@ -52,7 +52,7 @@ const colorLogCss = (playerId: PlayerId) => css`
 `
 
 const logCss = css`
-  font-size: 2em;
+  font-size: 1em;
 `
 
 const getLogTextColor = (playerId: PlayerId) => {
